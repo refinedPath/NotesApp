@@ -1,0 +1,4 @@
+# .gitignore
+.env
+vendor/
+src/config/new_user.sql
