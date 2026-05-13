@@ -1,19 +1,17 @@
 <?php
 declare(strict_types=1);
 
-// src/api/notes/update.php
+// src/api/notes/delete.php
 
 header("Content-Type: application/json");
-
-$noteDefaultBackground = '#212529';
 
 require_once __DIR__ . '/../../config/Database.php';
 require_once __DIR__ . '/../../models/Note.php';
 
-// Check request method is PUT
-if ($_SERVER['REQUEST_METHOD'] !== "PUT") {
+// Check requiest method is DELETE
+if ($_SERVER['REQUEST_METHOD'] !== "DELETE") {
   http_response_code(405);
-  echo json_encode(['error' => 'Method Not Allowed. Must use PUT.']);
+  echo json_encode(['error' => 'Method Not Allowed. Must use DELETE.']);
   exit;
 }
 
@@ -29,19 +27,6 @@ $payloadJson = json_decode($payload, true);
 // Validate ID
 $noteId = isset($payloadJson['id']) ? (int) $payloadJson['id'] : null;
 
-// Validate title
-$title = trim($payloadJson['title'] ?? '');
-if (empty($title)) {
-  http_response_code(400);
-  echo json_encode(['error' => 'Title is required']);
-  exit;
-}
-
-// Set defaults for optional fields
-$content = trim($payloadJson['content'] ?? '');
-$color = trim($payloadJson['color'] ?? $noteDefaultBackground);
-$isPinned = $payloadJson['isPinned'] ?? false;
-
 // Create DB connection and Note model
 $db = new Database();
 $connection = $db->getConnection();
@@ -54,16 +39,16 @@ if ($connection === null) {
 
 $note = new Note($connection);
 
-// Call update(), return JSON response with try/catch
+// Call delete(), return JSON response with try/catch
 if ($noteId !== null) {
   try
   {
-    $note->update($noteId, $title, $content, $color, $isPinned);
+    $note->delete($noteId);
 
-    echo json_encode(['success' => "Note with ID {$noteId} was updated"]);
+    echo json_encode(['success' => "Note with ID {$noteId} was deleted"]);
   } catch (Exception $e) {
     http_response_code(500);
-    echo json_encode(['error' => "Cannot update note with ID {$noteId}"]);
+    echo json_encode(['error' => "Cannot delete note with ID {$noteId}"]);
   }
 } else {
   http_response_code(400);
