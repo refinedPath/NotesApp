@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] !== "GET") {
   exit;
 }
 
-// Validate
+// Validate ID
 $queryNoteId = isset($_GET['id']) ? (int) $_GET['id'] : null;
 
 // Create DB connection and Note model
@@ -24,7 +24,7 @@ $connection = $db->getConnection();
 
 if ($connection === null) {
   http_response_code(500);
-  echo json_encode(['error' => "Cannot connect to database"]);
+  echo json_encode(['error' => 'Cannot connect to database']);
   exit;
 }
 

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-// src/api/notes/create.php
+// src/api/notes/update.php
 
 header("Content-Type: application/json");
 
@@ -10,10 +10,10 @@ $noteDefaultBackground = '#212529';
 require_once __DIR__ . '/../../config/Database.php';
 require_once __DIR__ . '/../../models/Note.php';
 
-// Check request method is POST
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+// Check request method is PUT
+if ($_SERVER['REQUEST_METHOD'] !== "PUT") {
   http_response_code(405);
-  echo json_encode(['error' => 'Method Not Allowed. Must use POST.']);
+  echo json_encode(['error' => 'Method Not Allowed. Must use PUT.']);
   exit;
 }
 
@@ -25,6 +25,9 @@ if (empty($payload = file_get_contents('php://input'))) {
 }
 
 $payloadJson = json_decode($payload, true);
+
+// Validate ID
+$noteId = isset($payloadJson['id']) ? (int) $payloadJson['id'] : null;
 
 // Validate title
 $title = trim($payloadJson['title'] ?? '');
@@ -51,13 +54,18 @@ if ($connection === null) {
 
 $note = new Note($connection);
 
-// Call create(), return JSON response with try/catch
-try
-{
-  $newNoteId = $note->create($title, $content, $color, $isPinned);
+// Call update(), return JSON response with try/catch
+if ($noteId !== null) {
+  try
+  {
+    $note->update($noteId, $title, $content, $color, $isPinned);
 
-  echo json_encode(['success' => "Created new note with ID {$newNoteId}"]);
-} catch (Exception $e) {
-  http_response_code(500);
-  echo json_encode(['error' => "Cannot create new note: {$e->getMessage()}"]);
+    echo json_encode(['success' => "Note with ID {$noteId} was updated"]);
+  } catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['error' => "Cannot update note with ID {$noteId}"]);
+  }
+} else {
+  http_response_code(404);
+  echo json_encode(['error' => "Note ID is required"]);
 }
