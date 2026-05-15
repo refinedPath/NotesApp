@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-// src/api/notes/read.php
+// src/api/tags/read.php
 
 header("Content-Type: application/json");
 
@@ -15,9 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] !== "GET") {
 }
 
 // Validate ID
-$queryNoteId = isset($_GET['id']) ? (int) $_GET['id'] : null;
+$queriedTagId = isset($_GET['id']) ? (int) $_GET['id'] : null;
 
-// Create DB connection and Note model
+// Create DB connection and tag model
 $db = new Database();
 $connection = $db->getConnection();
 
@@ -27,17 +27,17 @@ if ($connection === null) {
   exit;
 }
 
-$note = new Note($connection);
+$tag = new Tag($connection);
 
-if ($queryNoteId !== null) {  // querying a note by ID
-  $queriedNote = $note->getById($queryNoteId);
+if ($queriedTagId !== null) { // querying a tag by ID
+  $queriedTag = $tag->getById($queriedTagId);
 
-  if ($queriedNote === null) {
+  if ($queriedTag === null) {
     http_response_code(404);
-    echo json_encode(['error' => "Note with ID {$queryNoteId} not found."]);
+    echo json_encode(['error' => 'Tag not found.']);
   } else {
-    echo json_encode(['success' => $queriedNote]);
+    echo json_encode(['success' => $queriedTag]);
   }
-} else {  // querying all notes
-  echo json_encode(['success' => $note->getAll()]);
+} else {  // Querying all Tags
+  echo json_encode(['success' => $tag->getAll()]);
 }

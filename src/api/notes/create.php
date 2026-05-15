@@ -12,14 +12,14 @@ require_once __DIR__ . '/../../bootstrap.php';
 // Check request method is POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
   http_response_code(405);
-  echo json_encode(['error' => 'Method Not Allowed. Must use POST.']);
+  echo json_encode(['error' => 'Method not allowed. Must use POST.']);
   exit;
 }
 
 // Read JSON body
 if (empty($payload = file_get_contents('php://input'))) {
   http_response_code(400);
-  echo json_encode(['error' => 'Bad request or malformed JSON']);
+  echo json_encode(['error' => 'Bad request or malformed JSON.']);
   exit;
 }
 
@@ -29,7 +29,7 @@ $payloadJson = json_decode($payload, true);
 $title = trim($payloadJson['title'] ?? '');
 if (empty($title)) {
   http_response_code(400);
-  echo json_encode(['error' => 'Title is required']);
+  echo json_encode(['error' => 'Title is required.']);
   exit;
 }
 
@@ -44,7 +44,7 @@ $connection = $db->getConnection();
 
 if ($connection === null) {
   http_response_code(500);
-  echo json_encode(['error' => 'Cannot connect to database']);
+  echo json_encode(['error' => 'Cannot connect to database.']);
   exit;
 }
 
@@ -55,8 +55,8 @@ try
 {
   $newNoteId = $note->create($title, $content, $color, $isPinned);
 
-  echo json_encode(['success' => "Created new note with ID {$newNoteId}"]);
+  echo json_encode(['success' => "Created new note with ID {$newNoteId}."]);
 } catch (Exception $e) {
   http_response_code(500);
-  echo json_encode(['error' => "Cannot create new note: {$e->getMessage()}"]);
+  echo json_encode(['error' => "Cannot create new note: {$e->getMessage()}."]);
 }
