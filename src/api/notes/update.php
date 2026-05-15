@@ -7,8 +7,7 @@ header("Content-Type: application/json");
 
 $noteDefaultBackground = '#212529';
 
-require_once __DIR__ . '/../../config/Database.php';
-require_once __DIR__ . '/../../models/Note.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 // Check request method is PUT
 if ($_SERVER['REQUEST_METHOD'] !== "PUT") {

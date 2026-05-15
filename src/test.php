@@ -9,9 +9,7 @@ $tableNames = [
   'noteTagsTable' => "note_tags",
 ];
 
-require_once __DIR__ . '/config/Database.php';
-require_once __DIR__ . '/models/Note.php';
-require_once __DIR__ . '/models/Tag.php';
+require_once __DIR__ . '/bootstrap.php';
 
 // Connect
 $db = new Database();
