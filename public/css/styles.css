@@ -1,0 +1,50 @@
+/* Adding missing style for buttons */
+.btn-outline-tertiary {
+  --bs-btn-color: var(--bs-secondary-color);
+  --bs-btn-border-color: var(--bs-border-color);
+  --bs-btn-hover-bg: var(--bs-tertiary-bg);
+  --bs-btn-hover-border-color: var(--bs-border-color);
+  --bs-btn-hover-color: var(--bs-body-color);
+  --bs-btn-active-bg: var(--bs-tertiary-bg);
+  --bs-btn-active-border-color: var(--bs-border-color);
+  --bs-btn-active-color: var(--bs-body-color);
+}
+
+/* Color accent on the left edge — uses the --note-color custom property set inline */
+.note-card {
+  border-left: 4px solid var(--note-color, transparent);
+  transition: transform 0.15s ease;
+}
+
+.note-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Pin icon in top-right corner */
+.note-pin {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.75rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.note-pin .pin-hover {
+  display: none;
+}
+
+.note-pin:hover .pin-default {
+  display: none;
+}
+
+.note-pin:hover .pin-hover {
+  display: inline;
+}
+
+/* Truncate content preview at 3 lines with an ellipsis */
+.note-preview {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
