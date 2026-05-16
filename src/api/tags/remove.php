@@ -1,16 +1,17 @@
 <?php
+
 declare(strict_types=1);
 
-// src/api/tags/assign.php
+// src/api/tags/remove.php
 
-header("Content-Type: application/json");
+header('Content-Type: application/json');
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-// Check request method is POST
-if ($_SERVER['REQUEST_METHOD'] !== "POST") {
+// Check request method is DELETE
+if ($_SERVER['REQUEST_METHOD'] !== "DELETE") {
   http_response_code(405);
-  echo json_encode(['error' => 'Method not allowed. Must use POST.']);
+  echo json_encode(['error' => 'Method not allowed. Must use DELETE.']);
   exit;
 }
 
@@ -21,15 +22,15 @@ if (empty($rawBody = file_get_contents('php://input'))) {
   exit;
 }
 
-$requestBody = json_decode($rawBody, true);
-if ($requestBody === null) {
+$requestData = json_decode($rawBody, true);
+if ($requestData === null) {
   http_response_code(400);
   echo json_encode(['error' => 'Malformed JSON data.']);
   exit;
 }
 
 // Validate tag ID
-$tagId = isset($requestBody['tagId']) ? (int) $requestBody['tagId'] : null;
+$tagId = isset($requestData['tagId']) ? (int) $requestData['tagId'] : null;
 if ($tagId === null) {
   http_response_code(400);
   echo json_encode(['error' => 'Tag ID is required.']);
@@ -37,7 +38,7 @@ if ($tagId === null) {
 }
 
 // Validate note ID
-$noteId = isset($requestBody['noteId']) ? (int) $requestBody['noteId'] : null;
+$noteId = isset($requestData['noteId']) ? (int) $requestData['noteId'] : null;
 if ($noteId === null) {
   http_response_code(400);
   echo json_encode(['error' => 'Note ID is required.']);
@@ -56,18 +57,17 @@ if ($connection === null) {
 
 $tag = new Tag($connection);
 
-// Call assignToNote(), return JSON response with try/catch
-try
-{
-  $assignedTag = $tag->assignToNote($tagId, $noteId);
+// Call removeFromNote(), return JSON response with try/catch
+try {
+  $removedTag = $tag->removeFromNote($tagId, $noteId);
 
-  echo json_encode(['success' => "Assigned tag with ID {$tagId} to note with ID {$noteId}."]);
+  echo json_encode(['success' => "Removed tag with ID {$tagId} from note with ID {$noteId}."]);
 } catch (Exception $e) {
   http_response_code(500);
 
   if (Config::get('APP_DEBUG') === "true") {
-    echo json_encode(['error' => "Cannot assign tag with ID {$tagId} to note with ID {$noteId}. Database error message: {$e->getMessage()}."]);
+    echo json_encode(['error' => "Cannot remove tag with ID {$tagId} from note with ID {$noteId}. Database error message: {$e->getMessage()}."]);
   } else {
-    echo json_encode(['error' => "Cannot assign tag with ID {$tagId} to note with ID {$noteId}."]);
+    echo json_encode(['error' => "Cannot remove tag with ID {$tagId} from note with ID {$noteId}."]);
   }
 }
