@@ -17,6 +17,16 @@ if ($_SERVER['REQUEST_METHOD'] !== "GET") {
 // Validate ID
 $queryNoteId = isset($_GET['id']) ? (int) $_GET['id'] : null;
 
+// Check if we have Tag ID
+$queryTagId = isset($_GET['tagId']) ? (int) $_GET['tagId']: null;
+
+// Error if both Note ID and Tag ID present
+if ($queryNoteId !== null && $queryTagId !== null) {
+  http_response_code(400);
+  echo json_encode(['error' => 'Cannot use both id and tagId parameters. Use one at a time.']);
+  exit;
+}
+
 // Create DB connection and Note model
 $db = new Database();
 $connection = $db->getConnection();
@@ -28,6 +38,11 @@ if ($connection === null) {
 }
 
 $note = new Note($connection);
+
+if ($queryTagId !== null) { // querying all notes that belong to a tag and exiting
+  echo json_encode(['success' => $note->getByTagId($queryTagId)]);
+  exit;
+}
 
 if ($queryNoteId !== null) {  // querying a note by ID
   $queriedNote = $note->getById($queryNoteId);
