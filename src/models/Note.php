@@ -36,13 +36,45 @@ class Note
     return (int) $this->connection->lastInsertId();
   }
 
+  // validateSort()
+  // Validates sorting and order directions
+  private function validateSort(string $sortBy = 'created_at', string $orderDirection = 'DESC'): array
+  {
+    $allowedSortList = [
+      'created_at',
+      'updated_at',
+      'title',
+    ];
+    $allowedSortDirections = [
+      'ASC',
+      'DESC',
+    ];
+
+    if (!in_array($sortBy, $allowedSortList, true)) {
+      $sortBy = 'created_at';
+    }
+    if (!in_array($orderDirection, $allowedSortDirections, true)) {
+      $orderDirection = 'DESC';
+    }
+
+    return [
+      $sortBy,
+      $orderDirection,
+    ];
+  }
+
   // getAll()
   // Returns all notes, ordered by is_pinned DESC, then created_at DESC
   /** @return array<int, array<string, mixed>> */
-  public function getAll(): array
+  public function getAll(string $sortBy = 'created_at', string $orderDirection = 'DESC'): array
   {
+    [
+      $sortBy,
+      $orderDirection,
+    ] = $this->validateSort($sortBy, $orderDirection);
+
     $stmt = $this->connection->prepare(
-      "SELECT * FROM {$this->notesTable} ORDER BY is_pinned DESC, created_at DESC"
+      "SELECT * FROM {$this->notesTable} ORDER BY is_pinned DESC, $sortBy $orderDirection"
     );
 
     $stmt->execute();
@@ -99,17 +131,80 @@ class Note
   // getByTagId()
   // Returns all notes that have a tag
   /** @return array<int, array<string, mixed>> */
-  public function getByTagId(int $tagId): array
+  public function getByTagId(int $tagId, string $sortBy = 'created_at', string $orderDirection = 'DESC'): array
   {
+    [
+      $sortBy,
+      $orderDirection,
+    ] = $this->validateSort($sortBy, $orderDirection);
+
     $stmt = $this->connection->prepare(
       "SELECT {$this->notesTable}.* FROM {$this->notesTable}
         JOIN {$this->noteTagsTable} ON {$this->notesTable}.id = {$this->noteTagsTable}.note_id
         WHERE {$this->noteTagsTable}.tag_id = :tagId
-        ORDER BY {$this->notesTable}.is_pinned DESC, {$this->notesTable}.created_at DESC"
+        ORDER BY {$this->notesTable}.is_pinned DESC, {$this->notesTable}.{$sortBy} {$orderDirection}"
     );
 
     $stmt->execute([
       ':tagId' => $tagId,
+    ]);
+
+    return $stmt->fetchAll();
+  }
+
+  // search()
+  // Return all notes according to search criteria
+  /** @return array<int, array<string, mixed>> */
+  public function search(string $keyword, string $sortBy = 'created_at', string $orderDirection = 'DESC'): array
+  {
+    [
+      $sortBy,
+      $orderDirection,
+    ] = $this->validateSort($sortBy, $orderDirection);
+
+    $stmt = $this->connection->prepare(
+      "SELECT * FROM {$this->notesTable}
+        WHERE
+          title LIKE :keyword
+          OR
+          content LIKE :keyword
+        ORDER BY is_pinned DESC, {$sortBy} {$orderDirection}"
+    );
+
+    $stmt->execute([
+      ':keyword' => '%' . $keyword . '%',
+    ]);
+
+    return $stmt->fetchAll();
+  }
+
+  // searchByTagId
+  // Return all tagged notes according to search criteria
+  /** @return array<int, array<string, mixed>> */
+  public function searchByTagId(int $tagId, string $keyword, string $sortBy = 'created_at', string $orderDirection = 'DESC'): array
+  {
+    [
+      $sortBy,
+      $orderDirection,
+    ] = $this->validateSort($sortBy, $orderDirection);
+
+    $stmt = $this->connection->prepare(
+      "SELECT {$this->notesTable}.* FROM {$this->notesTable}
+        JOIN {$this->noteTagsTable} ON {$this->notesTable}.id = {$this->noteTagsTable}.note_id
+        WHERE
+          {$this->noteTagsTable}.tag_id = :tagId
+          AND
+          (
+            {$this->notesTable}.title LIKE :keyword
+            OR
+            {$this->notesTable}.content LIKE :keyword
+          )
+        ORDER BY {$this->notesTable}.is_pinned DESC, {$this->notesTable}.{$sortBy} {$orderDirection}"
+    );
+
+    $stmt->execute([
+      ':tagId' => $tagId,
+      ':keyword' => '%' . $keyword . '%',
     ]);
 
     return $stmt->fetchAll();
