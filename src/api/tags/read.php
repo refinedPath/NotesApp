@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] !== "GET") {
   exit;
 }
 
-// Validate ID
+// Validate tag ID
 $queriedTagId = isset($_GET['id']) ? (int) $_GET['id'] : null;
 
 // Create DB connection and tag model

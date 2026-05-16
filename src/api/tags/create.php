@@ -23,7 +23,7 @@ if (empty($payload = file_get_contents('php://input'))) {
 
 $payloadJson = json_decode($payload, true);
 
-// Validate name
+// Validate tag name
 $name = trim($payloadJson['name'] ?? '');
 if (empty($name)) {
   http_response_code(400);

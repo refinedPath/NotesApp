@@ -23,7 +23,7 @@ if (empty($payload = file_get_contents('php://input'))) {
 
 $payloadArr = json_decode($payload, true);
 
-// Validate ID
+// Validate tag ID
 $tagId = isset($payloadArr['id']) ? (int) $payloadArr['id'] : null;
 if ($tagId === null) {
   http_response_code(400);

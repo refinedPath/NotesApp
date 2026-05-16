@@ -25,7 +25,7 @@ if (empty($payload = file_get_contents('php://input'))) {
 
 $payloadJson = json_decode($payload, true);
 
-// Validate ID
+// Validate note ID
 $noteId = isset($payloadJson['id']) ? (int) $payloadJson['id'] : null;
 
 // Validate title
