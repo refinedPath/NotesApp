@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 // src/api/tags/update.php
@@ -52,19 +53,25 @@ if ($connection === null) {
 $tag = new Tag($connection);
 
 // Call update(), return JSON response with try/catch
-try
-{
-  $tag->update($tagId, $name);
+try {
+  $tagExists = $tag->getById($tagId);
 
-  echo json_encode(['success' => "Tag with ID {$tagId} was updated."]);
+  if ($tagExists !== null) {
+    $tag->update($tagId, $name);
+
+    echo json_encode(['success' => "Tag '{$name}' was updated."]);
+  } else {
+    http_response_code(404);
+    echo json_encode(['error' => "Cannot update tag. Tag with ID {$tagId} not found."]);
+  }
 } catch (Exception $e) {
   if ($e->getCode() === '23000') {
     http_response_code(400);
 
     if (Config::get('APP_DEBUG') === "true") {
-      echo json_encode(['error' => "Tag \"{$name}\" already exists. Try another name. Database error message: {$e->getMessage()}."]);
+      echo json_encode(['error' => "Tag '{$name}' already exists. Try another name. Database error message: {$e->getMessage()}."]);
     } else {
-      echo json_encode(['error' => "Tag \"{$name}\" already exists. Try another name."]);
+      echo json_encode(['error' => "Tag '{$name}' already exists. Try another name."]);
     }
   } else {
     if (Config::get('APP_DEBUG') === "true") {
