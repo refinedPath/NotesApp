@@ -45,7 +45,7 @@ if ($noteId === null) {
   exit;
 }
 
-// Create DB connection and tag model
+// Create DB connection and tag and note models
 $db = new Database();
 $connection = $db->getConnection();
 
@@ -56,12 +56,28 @@ if ($connection === null) {
 }
 
 $tag = new Tag($connection);
+$note = new Note($connection);
 
 // Call removeFromNote(), return JSON response with try/catch
 try {
+  $tagExists = $tag->getById($tagId);
+  $noteExists = $note->getById($noteId);
+
+  if ($tagExists === null) {
+    http_response_code(404);
+    echo json_encode(['error' => "Cannot remove tag from note. Tag with ID {$tagId} not found."]);
+    exit;
+  }
+
+  if ($noteExists === null) {
+    http_response_code(404);
+    echo json_encode(['error' => "Cannot remove tag from note. Note with ID {$noteId} not found."]);
+    exit;
+  }
+
   $removedTag = $tag->removeFromNote($tagId, $noteId);
 
-  echo json_encode(['success' => "Removed tag with ID {$tagId} from note with ID {$noteId}."]);
+  echo json_encode(['success' => "Removed tag '{$tagExists['name']}' from note '{$noteExists['title']}'."]);
 } catch (Exception $e) {
   http_response_code(500);
 
