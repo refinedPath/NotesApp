@@ -14,14 +14,14 @@ if ($_SERVER['REQUEST_METHOD'] !== "GET") {
   exit;
 }
 
-// Validate ID
-$queryNoteId = isset($_GET['id']) ? (int) $_GET['id'] : null;
+// Validate note ID
+$queriedNoteId = isset($_GET['id']) ? (int) $_GET['id'] : null;
 
-// Check if we have Tag ID
-$queryTagId = isset($_GET['tagId']) ? (int) $_GET['tagId']: null;
+// Check if we have Tag ID and validate it
+$queriedTagId = isset($_GET['tagId']) ? (int) $_GET['tagId']: null;
 
 // Error if both Note ID and Tag ID present
-if ($queryNoteId !== null && $queryTagId !== null) {
+if ($queriedNoteId !== null && $queriedTagId !== null) {
   http_response_code(400);
   echo json_encode(['error' => 'Cannot use both id and tagId parameters. Use one at a time.']);
   exit;
@@ -39,17 +39,17 @@ if ($connection === null) {
 
 $note = new Note($connection);
 
-if ($queryTagId !== null) { // querying all notes that belong to a tag and exiting
-  echo json_encode(['success' => $note->getByTagId($queryTagId)]);
+if ($queriedTagId !== null) { // querying all notes that belong to a tag and exiting
+  echo json_encode(['success' => $note->getByTagId($queriedTagId)]);
   exit;
 }
 
-if ($queryNoteId !== null) {  // querying a note by ID
-  $queriedNote = $note->getById($queryNoteId);
+if ($queriedNoteId !== null) {  // querying a note by ID
+  $queriedNote = $note->getById($queriedNoteId);
 
   if ($queriedNote === null) {
     http_response_code(404);
-    echo json_encode(['error' => "Note with ID {$queryNoteId} not found."]);
+    echo json_encode(['error' => "Note with ID {$queriedNoteId} not found."]);
   } else {
     echo json_encode(['success' => $queriedNote]);
   }
