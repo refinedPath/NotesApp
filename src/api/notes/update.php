@@ -27,6 +27,11 @@ $payloadJson = json_decode($payload, true);
 
 // Validate note ID
 $noteId = isset($payloadJson['id']) ? (int) $payloadJson['id'] : null;
+if ($noteId === null) {
+  http_response_code(400);
+  echo json_encode(['error' => 'Note ID is required.']);
+  exit;
+}
 
 // Validate title
 $title = trim($payloadJson['title'] ?? '');
@@ -54,17 +59,24 @@ if ($connection === null) {
 $note = new Note($connection);
 
 // Call update(), return JSON response with try/catch
-if ($noteId !== null) {
-  try
-  {
+try
+{
+  $noteExists = $note->getById($noteId);
+
+  if ($noteExists !== null) {
     $note->update($noteId, $title, $content, $color, $isPinned);
 
-    echo json_encode(['success' => "Note with ID {$noteId} was updated."]);
-  } catch (Exception $e) {
-    http_response_code(500);
+    echo json_encode(['success' => "Note '{$title}' was updated."]);
+  } else {
+    http_response_code(404);
+    echo json_encode(['error' => "Cannot update note. Note with ID {$noteId} not found."]);
+  }
+} catch (Exception $e) {
+  http_response_code(500);
+
+  if (Config::get('APP_DEBUG') === "true") {
+    echo json_encode(['error' => "Cannot update note with ID {$noteId}. Database error message: {$e->getMessage()}."]);
+  } else {
     echo json_encode(['error' => "Cannot update note with ID {$noteId}."]);
   }
-} else {
-  http_response_code(400);
-  echo json_encode(['error' => 'Note ID is required.']);
 }
