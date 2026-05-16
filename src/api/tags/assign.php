@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 // src/api/tags/assign.php
@@ -44,7 +45,7 @@ if ($noteId === null) {
   exit;
 }
 
-// Create DB connection and tag model
+// Create DB connection and tag and note models
 $db = new Database();
 $connection = $db->getConnection();
 
@@ -55,13 +56,28 @@ if ($connection === null) {
 }
 
 $tag = new Tag($connection);
+$note = new Note($connection);
 
 // Call assignToNote(), return JSON response with try/catch
-try
-{
+try {
+  $tagExists = $tag->getById($tagId);
+  $noteExists = $note->getById($noteId);
+
+  if ($tagExists === null) {
+    http_response_code(404);
+    echo json_encode(['error' => "Cannot assign tag. Tag with ID {$tagId} not found."]);
+    exit;
+  }
+
+  if ($noteExists === null) {
+    http_response_code(404);
+    echo json_encode(['error' => "Cannot assign tag. Note with ID {$noteId} not found."]);
+    exit;
+  }
+
   $assignedTag = $tag->assignToNote($tagId, $noteId);
 
-  echo json_encode(['success' => "Assigned tag with ID {$tagId} to note with ID {$noteId}."]);
+  echo json_encode(['success' => "Assigned tag '{$tagExists['name']}' to note '{$noteExists['title']}'."]);
 } catch (Exception $e) {
   http_response_code(500);
 
