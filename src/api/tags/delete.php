@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 // src/api/tags/delete.php
@@ -49,17 +50,23 @@ if ($connection === null) {
 $tag = new Tag($connection);
 
 // Call delete(), return JSON response with try/catch
-try
-{
-  $tag->delete($tagId);
+try {
+  $tagExists = $tag->getById($tagId);
 
-  echo json_encode(['success' => "Tag with ID {$tagId} was deleted."]);
+  if ($tagExists !== null) {
+    $tag->delete($tagId);
+
+    echo json_encode(['success' => "Tag '{$tagExists['name']}' was deleted."]);
+  } else {
+    http_response_code(404);
+    echo json_encode(['error' => "Cannot delete tag. Tag with ID {$tagId} not found."]);
+  }
 } catch (Exception $e) {
   http_response_code(500);
 
   if (Config::get('APP_DEBUG') === "true") {
-    echo json_encode(['error' => "Cannot delete tag: {$e->getMessage()}."]);
+    echo json_encode(['error' => "Cannot delete tag with ID {$tagId}. Database error message: {$e->getMessage()}."]);
   } else {
-    echo json_encode(['error' => "Cannot delete tag."]);
+    echo json_encode(['error' => "Cannot delete tag with ID {$tagId}."]);
   }
 }

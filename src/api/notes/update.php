@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 // src/api/notes/update.php
@@ -59,8 +60,7 @@ if ($connection === null) {
 $note = new Note($connection);
 
 // Call update(), return JSON response with try/catch
-try
-{
+try {
   $noteExists = $note->getById($noteId);
 
   if ($noteExists !== null) {
