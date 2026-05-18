@@ -40,16 +40,17 @@
 
   <!-- Main content -->
   <main class="container mt-4">
-    <div class="d-none text-center line-height-xxl" id="notesEmptyState">No notes yet.<br>
-      Click <button class="btn btn-outline-tertiary" type="button" id="newNote2Btn"
-        aria-label="New note" data-bs-toggle="modal" data-bs-target="#noteModal" data-mode="create">
-        <i class="bi bi-plus-circle"></i>
-        <span class="d-none d-sm-inline">New note</span>
-      </button> to add one.</div>
 
-    <div class="row" id="notesGrid">
-
+    <div class="d-none text-center line-height-xxl py-5 my-5" id="notesEmptyState">
+      <i class="bi bi-journal-text" style="font-size: 4rem;"></i>
+      <p class="h5 mt-3 fw-semibold">No notes yet.</p>
+      <p class="mb-0">Click <button class="btn btn-outline-tertiary" type="button" id="newNote2Btn"
+          aria-label="New note" data-bs-toggle="modal" data-bs-target="#noteModal" data-mode="create">
+          <i class="bi bi-plus-circle"></i>
+          <span class="d-none d-sm-inline">New note</span>
+        </button> to add one.</p>
     </div>
+    <div class="row" id="notesGrid"></div>
 
   </main>
 
@@ -92,7 +93,8 @@
 
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-tertiary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" form="noteForm" class="btn btn-outline-tertiary" id="noteSubmitBtn">Save changes</button>
+          <button type="submit" form="noteForm" class="btn btn-outline-tertiary" id="noteSubmitBtn">Save
+            changes</button>
         </div>
 
       </div>
