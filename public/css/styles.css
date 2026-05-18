@@ -14,7 +14,7 @@
   line-height: 2;
 }
 
-#newNote2Btn {
+#emptyStateNewNoteBtn {
   --bs-btn-padding-y: .25rem;
   --bs-btn-padding-x: .5rem;
   --bs-btn-font-size: .75rem;
