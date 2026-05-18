@@ -2,3 +2,4 @@
 .env
 vendor/
 src/config/new_user.sql
+src/config/seed.sql

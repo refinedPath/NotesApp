@@ -10,9 +10,31 @@
   --bs-btn-active-color: var(--bs-body-color);
 }
 
+.line-height-sm {
+  line-height: 1.25;
+}
+
+.line-height-base {
+  line-height: 1.5;
+}
+
+.line-height-lg {
+  line-height: 1.75;
+}
+
+.line-height-xxl {
+  line-height: 2;
+}
+
+#newNote2Btn {
+  --bs-btn-padding-y: .25rem;
+  --bs-btn-padding-x: .5rem;
+  --bs-btn-font-size: .75rem;
+}
+
 /* Color accent on the left edge — uses the --note-color custom property set inline */
 .note-card {
-  border-left: 4px solid var(--note-color, transparent);
+  box-shadow: inset 4px 0 0 var(--note-color, transparent);
   transition: transform 0.15s ease;
 }
 
