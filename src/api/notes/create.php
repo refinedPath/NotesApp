@@ -64,5 +64,10 @@ try {
   echo json_encode(['success' => $newNote]);
 } catch (Throwable $e) {
   http_response_code(500);
-  echo json_encode(['error' => "Cannot create new note: {$e->getMessage()}."]);
+
+  if (Config::get('APP_DEBUG') === "true") {
+    echo json_encode(['error' => "Cannot create new note. Database error message: {$e->getMessage()}."]);
+  } else {
+    echo json_encode(['error' => "Cannot create new note."]);
+  }
 }

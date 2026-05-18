@@ -27,8 +27,8 @@ if (empty($payload = file_get_contents('php://input'))) {
 $payloadJson = json_decode($payload, true);
 
 // Validate note ID
-$noteId = isset($payloadJson['id']) ? (int) $payloadJson['id'] : null;
-if ($noteId === null) {
+$noteId = isset($_GET['id']) ? (int) $_GET['id'] : null;
+if ($noteId === null || $noteId <= 0) {
   http_response_code(400);
   echo json_encode(['error' => 'Note ID is required.']);
   exit;
@@ -45,7 +45,11 @@ if (empty($title)) {
 // Set defaults for optional fields
 $content = trim($payloadJson['content'] ?? '');
 $color = trim($payloadJson['color'] ?? $noteDefaultBackground);
-$isPinned = $payloadJson['isPinned'] ?? false;
+$isPinned = filter_var(
+  $payloadJson['is_pinned'] ?? false,
+  FILTER_VALIDATE_BOOLEAN,
+  FILTER_NULL_ON_FAILURE
+) ?? false;
 
 // Create DB connection and Note model
 $db = new Database();
@@ -61,17 +65,19 @@ $note = new Note($connection);
 
 // Call update(), return JSON response with try/catch
 try {
-  $noteExists = $note->getById($noteId);
+  $existingNote = $note->getById($noteId);
 
-  if ($noteExists !== null) {
+  if ($existingNote !== null) {
     $note->update($noteId, $title, $content, $color, $isPinned);
 
-    echo json_encode(['success' => "Note '{$title}' was updated."]);
+    $updatedNote = $note->getById($noteId);
+
+    echo json_encode(['success' => $updatedNote]);
   } else {
     http_response_code(404);
     echo json_encode(['error' => "Cannot update note. Note with ID {$noteId} not found."]);
   }
-} catch (Exception $e) {
+} catch (Throwable $e) {
   http_response_code(500);
 
   if (Config::get('APP_DEBUG') === "true") {

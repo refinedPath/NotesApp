@@ -86,10 +86,11 @@ async function init() {
     noteSubmitBtn.disabled = true;
     try {
       if (noteId.value === '') {
-        // CREATE mode
+        // Create note
         await createNote(payload);
       } else {
-        // TODO: EDIT mode in Substep 4
+        // Edit note
+        await updateNote(noteId.value, payload);
       }
 
       bootstrap.Modal.getOrCreateInstance(noteModal).hide();
@@ -209,6 +210,27 @@ async function createNote(payload) {
 
   const response = await fetch(url, {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+  const data = await response.json();
+
+  if (data.error) throw new Error(data.error);
+
+  return data.success;
+}
+
+// PUT updated note to the API
+async function updateNote(noteId, payload) {
+  const url = `${API_BASE}/notes/update.php?id=${encodeURIComponent(noteId)}`;
+
+  const response = await fetch(url, {
+    method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
