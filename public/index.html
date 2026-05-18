@@ -65,7 +65,7 @@
         <div class="modal-body">
 
           <!-- Form -->
-          <form action="#" method="GET">
+          <form action="#" id="noteForm" name="noteForm" method="GET">
             <div class="mb-3">
               <input type="hidden" id="noteId" name="noteId">
               <label for="title" class="form-label">Title</label>
@@ -92,7 +92,7 @@
 
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-tertiary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-outline-tertiary" id="noteSubmitBtn">Save changes</button>
+          <button type="submit" form="noteForm" class="btn btn-outline-tertiary" id="noteSubmitBtn">Save changes</button>
         </div>
 
       </div>

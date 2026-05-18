@@ -35,6 +35,7 @@ async function init() {
   // Cache DOM properties
   const noteModal = document.getElementById('noteModal');
   const noteModalLabel = document.getElementById('noteModalLabel');
+  const noteForm = document.getElementById('noteForm');
   const noteId = document.getElementById('noteId');
   const title = document.getElementById('title');
   const content = document.getElementById('content');
@@ -69,12 +70,36 @@ async function init() {
   });
 
   // Initial render
-  try {
-    const notes = await fetchNotes();
-    renderNotes(notes);
-  } catch (err) {
-    console.error(err);
-  }
+  reloadNotes();
+
+  // Create or Edit a note
+  noteForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const payload = {
+      title: title.value.trim(),
+      content: content.value.trim() || null,
+      color: color.value,
+      is_pinned: isPinned.checked ? 1 : 0,
+    };
+
+    noteSubmitBtn.disabled = true;
+    try {
+      if (noteId.value === '') {
+        // CREATE mode
+        await createNote(payload);
+      } else {
+        // TODO: EDIT mode in Substep 4
+      }
+
+      bootstrap.Modal.getOrCreateInstance(noteModal).hide();
+      await reloadNotes();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      noteSubmitBtn.disabled = false;
+    }
+  });
 
 }
 
@@ -176,4 +201,35 @@ function createNoteCardElement(note) {
     classes: ['col-12', 'col-sm-6', 'col-lg-4', 'mb-3'],
     children: [inner],
   });
+}
+
+// POST a new note to the API
+async function createNote(payload) {
+  const url = `${API_BASE}/notes/create.php`;
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+  const data = await response.json();
+
+  if (data.error) throw new Error(data.error);
+
+  return data.success;
+}
+
+// Reload the note list from the server and re-render
+async function reloadNotes() {
+  try {
+    const notes = await fetchNotes();
+    renderNotes(notes);
+  } catch (err) {
+    console.error(err);
+  }
 }

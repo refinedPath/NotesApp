@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 // src/api/notes/create.php
@@ -36,7 +37,11 @@ if (empty($title)) {
 // Set defaults for optional fields
 $content = trim($payloadJson['content'] ?? '');
 $color = trim($payloadJson['color'] ?? $noteDefaultBackground);
-$isPinned = $payloadJson['isPinned'] ?? false;
+$isPinned = filter_var(
+  $payloadJson['is_pinned'] ?? false,
+  FILTER_VALIDATE_BOOLEAN,
+  FILTER_NULL_ON_FAILURE
+) ?? false;
 
 // Create DB connection and Note model
 $db = new Database();
@@ -51,12 +56,13 @@ if ($connection === null) {
 $note = new Note($connection);
 
 // Call create(), return JSON response with try/catch
-try
-{
+try {
   $newNoteId = $note->create($title, $content, $color, $isPinned);
 
-  echo json_encode(['success' => "Created new note with ID {$newNoteId}."]);
-} catch (Exception $e) {
+  $newNote = $note->getById($newNoteId);
+
+  echo json_encode(['success' => $newNote]);
+} catch (Throwable $e) {
   http_response_code(500);
   echo json_encode(['error' => "Cannot create new note: {$e->getMessage()}."]);
 }
