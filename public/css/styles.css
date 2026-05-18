@@ -51,7 +51,7 @@
   display: inline;
 }
 
-/* Truncate title preview at 1 line1 with an ellipsis */
+/* Truncate title preview at 1 line with an ellipsis */
 .note-title-preview {
   display: -webkit-box;
   -webkit-box-orient: vertical;

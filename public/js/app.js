@@ -69,6 +69,10 @@ async function init() {
     }
   });
 
+  noteModal.addEventListener('shown.bs.modal', () => {
+    title.focus();
+  });
+
   // Initial render
   reloadNotes();
 
@@ -202,7 +206,7 @@ function createNoteCardElement(note) {
   const body = el('div', {
     classes: ['card-body', 'd-flex', 'flex-column'],
     children: [
-      el('h5', { classes: ['card-title', 'note-title-preview'], text: note.title }),
+      el('h5', { classes: ['card-title', 'note-title-preview'], text: note.title, title: note.title }),
       el('p', { classes: ['card-text', 'note-preview', 'flex-grow-1'], text: note.content ?? '' }),
       footer,
     ],
