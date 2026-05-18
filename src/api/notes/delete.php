@@ -15,18 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] !== "DELETE") {
   exit;
 }
 
-// Read JSON body
-if (empty($payload = file_get_contents('php://input'))) {
-  http_response_code(400);
-  echo json_encode(['error' => 'Bad request or malformed JSON.']);
-  exit;
-}
-
-$payloadJson = json_decode($payload, true);
-
 // Validate note ID
-$noteId = isset($payloadJson['id']) ? (int) $payloadJson['id'] : null;
-if ($noteId === null) {
+$noteId = isset($_GET['id']) ? (int) $_GET['id'] : null;
+if ($noteId === null || $noteId <= 0) {
   http_response_code(400);
   echo json_encode(['error' => 'Note ID is required.']);
   exit;
@@ -46,17 +37,17 @@ $note = new Note($connection);
 
 // Call delete(), return JSON response with try/catch
 try {
-  $noteExists = $note->getById($noteId);
+  $existingNote = $note->getById($noteId);
 
-  if ($noteExists !== null) {
+  if ($existingNote !== null) {
     $note->delete($noteId);
 
-    echo json_encode(['success' => "Note '{$noteExists['title']}' was deleted."]);
+    echo json_encode(['success' => ['id' => $noteId, 'deleted' => true]]);
   } else {
     http_response_code(404);
     echo json_encode(['error' => "Cannot delete note. Note with ID {$noteId} not found."]);
   }
-} catch (Exception $e) {
+} catch (Throwable $e) {
   http_response_code(500);
 
   if (Config::get('APP_DEBUG') === "true") {

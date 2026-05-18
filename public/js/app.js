@@ -102,6 +102,22 @@ async function init() {
     }
   });
 
+  // Delete note
+  const notesGrid = document.getElementById('notesGrid');
+  notesGrid.addEventListener('click', async (event) => {
+    const deleteBtn = event.target.closest('.js-delete-btn');
+    if (!deleteBtn) return;
+
+    if (!confirm('Delete this note? This cannot be undone.')) return;
+
+    try {
+      await deleteNote(deleteBtn.dataset.noteId);
+      await reloadNotes();
+    } catch (err) {
+      console.error(err);
+    }
+  });
+
 }
 
 // Fetch all notes from the API
@@ -169,9 +185,9 @@ function createNoteCardElement(note) {
   });
 
   const deleteBtn = el('button', {
-    classes: ['btn', 'btn-outline-tertiary'],
+    classes: ['btn', 'btn-outline-tertiary', 'js-delete-btn'],
     title: 'Delete',
-    dataset: { noteId: note.id },   // we'll need this in Substep 5 for delete
+    dataset: { noteId: note.id },
     children: [el('i', { classes: ['bi', 'bi-trash'] })],
   });
 
@@ -186,7 +202,7 @@ function createNoteCardElement(note) {
   const body = el('div', {
     classes: ['card-body', 'd-flex', 'flex-column'],
     children: [
-      el('h5', { classes: ['card-title'], text: note.title }),
+      el('h5', { classes: ['card-title', 'note-title-preview'], text: note.title }),
       el('p', { classes: ['card-text', 'note-preview', 'flex-grow-1'], text: note.content ?? '' }),
       footer,
     ],
@@ -207,7 +223,6 @@ function createNoteCardElement(note) {
 // POST a new note to the API
 async function createNote(payload) {
   const url = `${API_BASE}/notes/create.php`;
-
   const response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -215,11 +230,9 @@ async function createNote(payload) {
     },
     body: JSON.stringify(payload),
   });
-
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
   const data = await response.json();
-
   if (data.error) throw new Error(data.error);
 
   return data.success;
@@ -228,7 +241,6 @@ async function createNote(payload) {
 // PUT updated note to the API
 async function updateNote(noteId, payload) {
   const url = `${API_BASE}/notes/update.php?id=${encodeURIComponent(noteId)}`;
-
   const response = await fetch(url, {
     method: 'PUT',
     headers: {
@@ -236,11 +248,21 @@ async function updateNote(noteId, payload) {
     },
     body: JSON.stringify(payload),
   });
-
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
   const data = await response.json();
+  if (data.error) throw new Error(data.error);
 
+  return data.success;
+}
+
+// DELETE a note via the API
+async function deleteNote(id) {
+  const url = `${API_BASE}/notes/delete.php?id=${encodeURIComponent(id)}`;
+  const response = await fetch(url, { method: 'DELETE' });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+  const data = await response.json();
   if (data.error) throw new Error(data.error);
 
   return data.success;

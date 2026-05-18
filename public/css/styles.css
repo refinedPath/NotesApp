@@ -63,8 +63,18 @@
   display: inline;
 }
 
+/* Truncate title preview at 1 line1 with an ellipsis */
+.note-title-preview {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  overflow: hidden;
+}
+
 /* Truncate content preview at 3 lines with an ellipsis */
 .note-preview {
+  white-space: pre-line;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
