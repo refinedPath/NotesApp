@@ -10,18 +10,6 @@
   --bs-btn-active-color: var(--bs-body-color);
 }
 
-.line-height-sm {
-  line-height: 1.25;
-}
-
-.line-height-base {
-  line-height: 1.5;
-}
-
-.line-height-lg {
-  line-height: 1.75;
-}
-
 .line-height-xxl {
   line-height: 2;
 }
