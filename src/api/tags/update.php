@@ -33,7 +33,7 @@ if ($tagId === null) {
 }
 
 // Validate name
-$name = trim($payloadArr['name'] ?? '');
+$name = mb_trim($payloadArr['name'] ?? '');
 if (empty($name)) {
   http_response_code(400);
   echo json_encode(['error' => 'Tag name is required.']);

@@ -24,7 +24,7 @@ if (empty($payload = file_get_contents('php://input'))) {
 $payloadJson = json_decode($payload, true);
 
 // Validate tag name
-$name = trim($payloadJson['name'] ?? '');
+$name = mb_trim($payloadJson['name'] ?? '');
 if (empty($name)) {
   http_response_code(400);
   echo json_encode(['error' => 'Name is required.']);

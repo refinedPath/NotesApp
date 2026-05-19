@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] !== "GET") {
 // Validate note ID, Tag ID, search, sorting, and sort order and validate them
 $noteId = isset($_GET['id']) ? (int) $_GET['id'] : null;
 $tagId = isset($_GET['tagId']) ? (int) $_GET['tagId'] : null;
-$search = isset($_GET['search']) ? (trim($_GET['search'])) : null;
+$search = isset($_GET['search']) ? mb_trim($_GET['search']) : null;
 $sortBy = $_GET['sortBy'] ?? 'created_at';
 $orderDirection = $_GET['orderDirection'] ?? 'DESC';
 
