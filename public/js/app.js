@@ -62,7 +62,7 @@ async function init() {
       content.value = '';
       color.value = '#212529';
       isPinned.checked = false;
-      noteSubmitBtn.textContent = 'Create';
+      noteSubmitBtn.replaceChildren(el('i', { classes: ['bi', 'bi-plus-circle', 'me-1'] }), 'Create');
     } else if (mode === "edit") {
       const dataset = trigger.dataset;
 
@@ -72,7 +72,7 @@ async function init() {
       content.value = dataset.content;
       color.value = dataset.color;
       isPinned.checked = dataset.pinned === "true";
-      noteSubmitBtn.textContent = 'Save';
+      noteSubmitBtn.replaceChildren(el('i', { classes: ['bi', 'bi-check-circle', 'me-1'] }), 'Save');
     }
 
     titleCharCounter.textContent = title.value.length + " / 255";
