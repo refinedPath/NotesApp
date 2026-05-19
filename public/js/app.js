@@ -150,10 +150,10 @@ function renderNotes(notes) {
 
   notesEmptyState.classList.toggle('d-none', hasNotes);
 
-  if (hasNotes) {
+  // if (hasNotes) {
     const nodes = notes.map(createNoteCardElement);
     notesGrid.replaceChildren(...nodes);
-  }
+  // }
 }
 
 function createNoteCardElement(note) {
