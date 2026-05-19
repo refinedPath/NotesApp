@@ -41,6 +41,13 @@
   <!-- Main content -->
   <main class="container mt-4">
 
+    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+      id="notesLoadingState" style="background: rgba(0, 0, 0, 0.5); z-index: 1050;">
+      <div class="spinner-border text-light" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
     <div class="d-none text-center line-height-xxl py-5 my-5" id="notesEmptyState">
       <i class="bi bi-journal-text" style="font-size: 4rem;"></i>
       <p class="h5 mt-3 fw-semibold">No notes yet.</p>
@@ -50,6 +57,7 @@
           <span class="d-none d-sm-inline">New note</span>
         </button> to add one.</p>
     </div>
+
     <div class="row" id="notesGrid"></div>
 
   </main>
@@ -70,14 +78,15 @@
             <div class="mb-3">
               <input type="hidden" id="noteId" name="noteId">
               <label for="title" class="form-label">Title</label>
-              <input type="text" class="form-control" id="title" name="title" placeholder="Title (required)" required maxlength="255" aria-describedby="titleCounter">
+              <input type="text" class="form-control" id="title" name="title" placeholder="Title (required)" required
+                maxlength="255" aria-describedby="titleCounter">
               <div class="form-text text-end" id="titleCounter">0 / 255</div>
             </div>
 
             <div class="mb-3">
               <label for="content" class="form-label">Content</label>
-              <textarea class="form-control" id="content" name="content" rows="4"
-                placeholder="Content (optional)" maxlength="5000" aria-describedby="contentCounter"></textarea>
+              <textarea class="form-control" id="content" name="content" rows="4" placeholder="Content (optional)"
+                maxlength="5000" aria-describedby="contentCounter"></textarea>
               <div class="form-text text-end" id="contentCounter">0 / 5000</div>
             </div>
 

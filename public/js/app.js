@@ -25,6 +25,11 @@ function el(tag, { classes = [], text, title, dataset = {}, attrs = {}, children
   return node;
 }
 
+function setNotesLoading(isLoading) {
+  const loading = document.getElementById('notesLoadingState');
+  loading.classList.toggle('d-none', !isLoading);
+}
+
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {
@@ -287,10 +292,13 @@ async function deleteNote(id) {
 
 // Reload the note list from the server and re-render
 async function reloadNotes() {
+  setNotesLoading(true);
   try {
     const notes = await fetchNotes();
     renderNotes(notes);
   } catch (err) {
     console.error(err);
+  } finally {
+    setNotesLoading(false);
   }
 }
