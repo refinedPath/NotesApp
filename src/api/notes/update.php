@@ -41,9 +41,20 @@ if (empty($title)) {
   echo json_encode(['error' => 'Title is required.']);
   exit;
 }
+if (mb_strlen($title) > 255) {
+  http_response_code(400);
+  echo json_encode(['error' => 'Title cannot exceed 255 characters.']);
+  exit;
+}
 
 // Set defaults for optional fields
 $content = trim($payloadJson['content'] ?? '');
+if (mb_strlen($content) > 5000) {
+  http_response_code(400);
+  echo json_encode(['error' => 'Content cannot exceed 5000 characters.']);
+  exit;
+}
+
 $color = trim($payloadJson['color'] ?? $noteDefaultBackground);
 $isPinned = filter_var(
   $payloadJson['is_pinned'] ?? false,

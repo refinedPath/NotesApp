@@ -70,13 +70,15 @@
             <div class="mb-3">
               <input type="hidden" id="noteId" name="noteId">
               <label for="title" class="form-label">Title</label>
-              <input type="text" class="form-control" id="title" name="title" placeholder="Title (required)" required>
+              <input type="text" class="form-control" id="title" name="title" placeholder="Title (required)" required maxlength="255" aria-describedby="titleCounter">
+              <div class="form-text text-end" id="titleCounter">0 / 255</div>
             </div>
 
             <div class="mb-3">
               <label for="content" class="form-label">Content</label>
               <textarea class="form-control" id="content" name="content" rows="4"
-                placeholder="Content (optional)"></textarea>
+                placeholder="Content (optional)" maxlength="5000" aria-describedby="contentCounter"></textarea>
+              <div class="form-text text-end" id="contentCounter">0 / 5000</div>
             </div>
 
             <div class="mb-3">

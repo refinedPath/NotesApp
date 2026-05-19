@@ -38,7 +38,9 @@ async function init() {
   const noteForm = document.getElementById('noteForm');
   const noteId = document.getElementById('noteId');
   const title = document.getElementById('title');
+  const titleCharCounter = document.getElementById('titleCounter');
   const content = document.getElementById('content');
+  const contentCharCounter = document.getElementById('contentCounter');
   const color = document.getElementById('color');
   const isPinned = document.getElementById('isPinned');
   const noteSubmitBtn = document.getElementById('noteSubmitBtn');
@@ -67,6 +69,9 @@ async function init() {
       isPinned.checked = dataset.pinned === "true";
       noteSubmitBtn.textContent = 'Save';
     }
+
+    titleCharCounter.textContent = title.value.length + " / 255";
+    contentCharCounter.textContent = content.value.length + " / 5000";
   });
 
   noteModal.addEventListener('shown.bs.modal', () => {
@@ -104,6 +109,16 @@ async function init() {
     } finally {
       noteSubmitBtn.disabled = false;
     }
+  });
+
+  // Create or Edit note Title live char counter
+  title.addEventListener('input', () => {
+    titleCharCounter.textContent = title.value.length + " / 255";
+  });
+
+  // Create or Edit note Content live char counter
+  content.addEventListener('input', () => {
+    contentCharCounter.textContent = content.value.length + " / 5000";
   });
 
   // Delete note
@@ -150,10 +165,8 @@ function renderNotes(notes) {
 
   notesEmptyState.classList.toggle('d-none', hasNotes);
 
-  // if (hasNotes) {
-    const nodes = notes.map(createNoteCardElement);
-    notesGrid.replaceChildren(...nodes);
-  // }
+  const nodes = notes.map(createNoteCardElement);
+  notesGrid.replaceChildren(...nodes);
 }
 
 function createNoteCardElement(note) {
