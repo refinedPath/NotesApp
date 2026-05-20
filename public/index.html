@@ -63,17 +63,18 @@
   </main>
 
   <!-- Modals -->
-  <div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true">
+  <!-- New / edit note modal -->
+  <div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="noteModalTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">
       <div class="modal-content">
 
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="noteModalLabel">New note</h1>
+          <h1 class="modal-title fs-5" id="noteModalTitle">New note</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+
         <div class="modal-body">
 
-          <!-- Form -->
           <form id="noteForm" name="noteForm">
             <div class="mb-3">
               <input type="hidden" id="noteId" name="noteId">
@@ -107,6 +108,29 @@
               class="bi bi-x-circle me-1"></i>Close</button>
           <button type="submit" form="noteForm" class="btn btn-outline-tertiary" id="noteSubmitBtn"><i
               class="bi bi-plus-circle me-1"></i>Create</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmation modal -->
+  <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="confirmModalTitle">Confirmation</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body" id="confirmModalMessage">Are you sure?</div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-tertiary" id="confirmModalCancelBtn" data-bs-dismiss="modal"><i
+              class="bi bi-x-circle me-1"></i>Cancel</button>
+          <button type="button" class="btn btn-outline-tertiary" id="confirmModalConfirmBtn" data-bs-dismiss="modal"><i
+              class="bi bi-check-circle me-1"></i>Confirm</button>
         </div>
 
       </div>

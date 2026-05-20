@@ -55,6 +55,51 @@ function setButtonBusy(btn, isBusy) {
   }
 }
 
+// Confirmation modal
+function confirmAction({
+  title = 'Confirmation',
+  message = 'Are you sure?',
+  confirmLabel = 'Confirm',
+  confirmIcon = 'bi-check-circle',       // 'bi-trash'
+  confirmVariant = 'btn-outline-tertiary',    // 'btn-danger'
+  cancelLabel = 'Cancel',
+  cancelIcon = 'bi-x-circle',        // 'bi-arrow-left'
+  cancelVariant = 'btn-outline-tertiary',    // 'btn-danger'
+}) {
+  const modal = document.getElementById('confirmModal');
+  const modalTitle = modal.querySelector('#confirmModalTitle');
+  const modalMessage = modal.querySelector('#confirmModalMessage');
+
+  modalTitle.textContent = title;
+  modalMessage.textContent = message;
+
+  // Cancel button
+  const modalCancelBtn = modal.querySelector('#confirmModalCancelBtn');
+  modalCancelBtn.className = `btn ${cancelVariant}`;
+  modalCancelBtn.replaceChildren(el('i', { classes: ['bi', cancelIcon, 'me-1'] }), cancelLabel);
+
+  // Confirm button
+  const modalConfirmBtn = modal.querySelector('#confirmModalConfirmBtn');
+  modalConfirmBtn.className = `btn ${confirmVariant}`;
+  modalConfirmBtn.replaceChildren(el('i', { classes: ['bi', confirmIcon, 'me-1'] }), confirmLabel);
+
+  return new Promise(resolve => {
+    const controller = new AbortController();
+
+    let confirmed = false;
+    modalConfirmBtn.addEventListener('click', () => {
+      confirmed = true;
+    }, { signal: controller.signal });
+
+    modal.addEventListener('hidden.bs.modal', () => {
+      controller.abort();
+      resolve(confirmed);
+    }, { signal: controller.signal });
+
+    bootstrap.Modal.getOrCreateInstance(modal).show();
+  });
+}
+
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {
@@ -64,7 +109,7 @@ if (document.readyState === 'loading') {
 async function init() {
   // Cache DOM properties
   const noteModal = document.getElementById('noteModal');
-  const noteModalLabel = document.getElementById('noteModalLabel');
+  const noteModalTitle = document.getElementById('noteModalTitle');
   const noteForm = document.getElementById('noteForm');
   const noteId = document.getElementById('noteId');
   const title = document.getElementById('title');
@@ -81,7 +126,7 @@ async function init() {
     const mode = trigger.dataset.mode;
 
     if (mode === "create") {
-      noteModalLabel.textContent = 'New note';
+      noteModalTitle.textContent = 'New note';
       noteId.value = '';
       title.value = '';
       content.value = '';
@@ -91,7 +136,7 @@ async function init() {
     } else if (mode === "edit") {
       const dataset = trigger.dataset;
 
-      noteModalLabel.textContent = 'Edit note';
+      noteModalTitle.textContent = 'Edit note';
       noteId.value = dataset.noteId;
       title.value = dataset.title;
       content.value = dataset.content;
@@ -157,7 +202,12 @@ async function init() {
     const deleteBtn = event.target.closest('.js-delete-btn');
     if (!deleteBtn) return;
 
-    if (!confirm('Delete this note? This cannot be undone.')) return;
+    if (!await confirmAction({
+      title: 'Delete this note?',
+      message: 'This cannot be undone.',
+      confirmLabel: 'Delete',
+      confirmIcon: 'bi-trash',
+    })) return;
 
     setButtonBusy(deleteBtn, true);
     try {
