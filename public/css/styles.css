@@ -69,3 +69,7 @@
   line-clamp: 3;
   overflow: hidden;
 }
+
+.note-card .btn-group .btn {
+  width: 2rem;
+}

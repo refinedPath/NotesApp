@@ -30,6 +30,31 @@ function setNotesLoading(isLoading) {
   loading.classList.toggle('d-none', !isLoading);
 }
 
+function setButtonBusy(btn, isBusy) {
+  if (isBusy) {
+    btn.disabled = true;
+
+    const currentButtonIcon = btn.querySelector('i');
+    if (currentButtonIcon) {
+      const spinner = document.createElement('span');
+      spinner.classList.add('spinner-border', 'spinner-border-sm', 'js-busy-button-spinner');
+      if (btn.textContent.trim()) {
+        spinner.classList.add('me-1');
+      }
+      currentButtonIcon.classList.add('d-none', 'js-hidden-icon');
+      currentButtonIcon.before(spinner);
+    }
+  } else {
+    const currentButtonIcon = btn.querySelector('.js-busy-button-spinner');
+    if (currentButtonIcon) {
+      currentButtonIcon.remove();
+      btn.querySelector('.js-hidden-icon').classList.remove('d-none', 'js-hidden-icon');
+    }
+
+    btn.disabled = false;
+  }
+}
+
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {
@@ -97,7 +122,7 @@ async function init() {
       is_pinned: isPinned.checked ? 1 : 0,
     };
 
-    noteSubmitBtn.disabled = true;
+    setButtonBusy(noteSubmitBtn, true);
     try {
       if (noteId.value === '') {
         // Create note
@@ -112,7 +137,7 @@ async function init() {
     } catch (err) {
       console.error(err);
     } finally {
-      noteSubmitBtn.disabled = false;
+      setButtonBusy(noteSubmitBtn, false);
     }
   });
 
@@ -134,11 +159,14 @@ async function init() {
 
     if (!confirm('Delete this note? This cannot be undone.')) return;
 
+    setButtonBusy(deleteBtn, true);
     try {
       await deleteNote(deleteBtn.dataset.noteId);
       await reloadNotes();
     } catch (err) {
       console.error(err);
+    } finally {
+      setButtonBusy(deleteBtn, false);
     }
   });
 
