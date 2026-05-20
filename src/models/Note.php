@@ -128,6 +128,22 @@ class Note
     ]);
   }
 
+  // setPinned()
+  // Sets a note's pinned state, returns rowCount()
+  public function setPinned(int $id, bool $isPinned): int
+  {
+    $stmt = $this->connection->prepare(
+      "UPDATE {$this->notesTable} SET is_pinned = :isPinned WHERE id = :id"
+    );
+
+    $stmt->execute([
+      ':isPinned' => (int) $isPinned,
+      ':id' => $id,
+    ]);
+
+    return $stmt->rowCount();
+  }
+
   // getByTagId()
   // Returns all notes that have a tag
   /** @return array<int, array<string, mixed>> */
