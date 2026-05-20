@@ -119,6 +119,7 @@ async function init() {
   const color = document.getElementById('color');
   const isPinned = document.getElementById('isPinned');
   const noteSubmitBtn = document.getElementById('noteSubmitBtn');
+  const notesGrid = document.getElementById('notesGrid');
 
   // Wire the modal show.bs.modal listener
   noteModal.addEventListener('show.bs.modal', (event) => {
@@ -196,8 +197,7 @@ async function init() {
     contentCharCounter.textContent = content.value.length + " / 5000";
   });
 
-  // Delete note
-  const notesGrid = document.getElementById('notesGrid');
+  // Delete a note
   notesGrid.addEventListener('click', async (event) => {
     const deleteBtn = event.target.closest('.js-delete-btn');
     if (!deleteBtn) return;
@@ -217,6 +217,33 @@ async function init() {
       console.error(err);
     } finally {
       setButtonBusy(deleteBtn, false);
+    }
+  });
+
+  // Pin/unpin a note
+  notesGrid.addEventListener('click', async (event) => {
+    const pinBtn = event.target.closest('.js-pin-btn');
+    if (!pinBtn) return;
+
+    const pinIcon = pinBtn.querySelector('.pin-default');
+    const currentlyPinned = pinIcon.classList.contains('bi-pin-angle-fill');
+
+    const pinHoverIcon = pinBtn.querySelector('.pin-hover');
+    pinHoverIcon.classList.add('d-none');
+
+    const payload = {
+      is_pinned: !currentlyPinned,
+    };
+
+    setButtonBusy(pinBtn, true);
+    try {
+      await setPinned(pinBtn.dataset.noteId, payload);
+      await reloadNotes();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setButtonBusy(pinBtn, false);
+      pinHoverIcon.classList.remove('d-none');
     }
   });
 
@@ -263,8 +290,9 @@ function createNoteCardElement(note) {
   const pinHoverIcon = el('i', { classes: ['bi', 'bi-pin-angle', 'pin-hover'] });
 
   const pinBtn = el('button', {
-    classes: ['note-pin', 'border-0', 'p-0', 'bg-transparent'],
+    classes: ['note-pin', 'border-0', 'p-0', 'bg-transparent', 'js-pin-btn'],
     title: pinned ? 'Unpin' : 'Pin',
+    dataset: { noteId: note.id },
     children: [pinIcon, pinHoverIcon],
   });
 
@@ -360,6 +388,24 @@ async function updateNote(noteId, payload) {
 async function deleteNote(id) {
   const url = `${API_BASE}/notes/delete.php?id=${encodeURIComponent(id)}`;
   const response = await fetch(url, { method: 'DELETE' });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+  const data = await response.json();
+  if (data.error) throw new Error(data.error);
+
+  return data.success;
+}
+
+// Set pinned/unpinned state for a note via the API
+async function setPinned(id, payload) {
+  const url = `${API_BASE}/notes/pin.php?id=${encodeURIComponent(id)}`;
+  const response = await fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
   const data = await response.json();
