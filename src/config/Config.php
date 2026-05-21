@@ -6,6 +6,7 @@ declare(strict_types=1);
 
 class Config
 {
+  /** @var array<string, string> */
   private static array $envFile = [];
 
   public static function get(string $property): ?string
