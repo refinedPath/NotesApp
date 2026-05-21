@@ -47,14 +47,14 @@ if ($connection === null) {
   exit;
 }
 
-$tag = new Tag($connection);
+$tagModel = new Tag($connection);
 
 // Call delete(), return JSON response with try/catch
 try {
-  $tagExists = $tag->getById($tagId);
+  $tagExists = $tagModel->getById($tagId);
 
   if ($tagExists !== null) {
-    $tag->delete($tagId);
+    $tagModel->delete($tagId);
 
     echo json_encode(['success' => "Tag '{$tagExists['name']}' was deleted."]);
   } else {

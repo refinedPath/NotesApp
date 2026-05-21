@@ -56,16 +56,16 @@ if ($connection === null) {
   exit;
 }
 
-$note = new Note($connection);
+$noteModel = new Note($connection);
 
 // Call setPinned(), return JSON response with try/catch
 try {
-  $existingNote = $note->getById($noteId);
+  $existingNote = $noteModel->getById($noteId);
 
   if ($existingNote !== null) {
-    $note->setPinned($noteId, $isPinned);
+    $noteModel->setPinned($noteId, $isPinned);
 
-    $updatedNote = $note->getById($noteId);
+    $updatedNote = $noteModel->getById($noteId);
 
     echo json_encode(['success' => $updatedNote]);
   } else {

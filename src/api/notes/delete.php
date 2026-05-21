@@ -33,14 +33,14 @@ if ($connection === null) {
   exit;
 }
 
-$note = new Note($connection);
+$noteModel = new Note($connection);
 
 // Call delete(), return JSON response with try/catch
 try {
-  $existingNote = $note->getById($noteId);
+  $existingNote = $noteModel->getById($noteId);
 
   if ($existingNote !== null) {
-    $note->delete($noteId);
+    $noteModel->delete($noteId);
 
     echo json_encode(['success' => ['id' => $noteId, 'deleted' => true]]);
   } else {

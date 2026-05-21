@@ -64,13 +64,13 @@ if ($connection === null) {
   exit;
 }
 
-$note = new Note($connection);
+$noteModel = new Note($connection);
 
 // Call create(), return JSON response with try/catch
 try {
-  $newNoteId = $note->create($title, $content, $color, $isPinned);
+  $newNoteId = $noteModel->create($title, $content, $color, $isPinned);
 
-  $newNote = $note->getById($newNoteId);
+  $newNote = $noteModel->getById($newNoteId);
 
   echo json_encode(['success' => $newNote]);
 } catch (Throwable $e) {

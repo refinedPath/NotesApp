@@ -55,13 +55,13 @@ if ($connection === null) {
   exit;
 }
 
-$tag = new Tag($connection);
-$note = new Note($connection);
+$tagModel = new Tag($connection);
+$noteModel = new Note($connection);
 
 // Call removeFromNote(), return JSON response with try/catch
 try {
-  $tagExists = $tag->getById($tagId);
-  $noteExists = $note->getById($noteId);
+  $tagExists = $tagModel->getById($tagId);
+  $noteExists = $noteModel->getById($noteId);
 
   if ($tagExists === null) {
     http_response_code(404);
@@ -75,7 +75,7 @@ try {
     exit;
   }
 
-  $removedTag = $tag->removeFromNote($tagId, $noteId);
+  $removedTag = $tagModel->removeFromNote($tagId, $noteId);
 
   echo json_encode(['success' => "Removed tag '{$tagExists['name']}' from note '{$noteExists['title']}'."]);
 } catch (Exception $e) {

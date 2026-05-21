@@ -42,11 +42,11 @@ if ($connection === null) {
   exit;
 }
 
-$tag = new Tag($connection);
+$tagModel = new Tag($connection);
 
 // Call create(), return JSON response with try/catch
 try {
-  $newTagId = $tag->create($name);
+  $newTagId = $tagModel->create($name);
 
   echo json_encode(['success' => "Created new tag with ID {$newTagId}."]);
 } catch (Exception $e) {

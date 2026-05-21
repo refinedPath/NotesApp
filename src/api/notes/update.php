@@ -72,16 +72,16 @@ if ($connection === null) {
   exit;
 }
 
-$note = new Note($connection);
+$noteModel = new Note($connection);
 
 // Call update(), return JSON response with try/catch
 try {
-  $existingNote = $note->getById($noteId);
+  $existingNote = $noteModel->getById($noteId);
 
   if ($existingNote !== null) {
-    $note->update($noteId, $title, $content, $color, $isPinned);
+    $noteModel->update($noteId, $title, $content, $color, $isPinned);
 
-    $updatedNote = $note->getById($noteId);
+    $updatedNote = $noteModel->getById($noteId);
 
     echo json_encode(['success' => $updatedNote]);
   } else {

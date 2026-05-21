@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 // src/api/tags/read.php
@@ -15,13 +16,13 @@ if ($_SERVER['REQUEST_METHOD'] !== "GET") {
 }
 
 // Validate tag ID
-$queriedTagId = isset($_GET['id']) ? (int) $_GET['id'] : null;
+$tagId = isset($_GET['id']) ? (int) $_GET['id'] : null;
 
 // Check if we have Note ID and validate it
-$queriedNoteId = isset($_GET['noteId']) ? (int) $_GET['noteId'] : null;
+$noteId = isset($_GET['noteId']) ? (int) $_GET['noteId'] : null;
 
 // Error if both Tag ID and Note ID present
-if ($queriedTagId !== null && $queriedNoteId !== null) {
+if ($tagId !== null && $noteId !== null) {
   http_response_code(400);
   echo json_encode(['error' => 'Cannot use both id and noteId parameters. Use one at a time.']);
   exit;
@@ -37,22 +38,22 @@ if ($connection === null) {
   exit;
 }
 
-$tag = new Tag($connection);
+$tagModel = new Tag($connection);
 
-if ($queriedNoteId !== null) { // querying all tags that belong to a note and exiting
-  echo json_encode(['success' => $tag->getTagsByNoteId($queriedNoteId)]);
+if ($noteId !== null) { // querying all tags that belong to a note and exiting
+  echo json_encode(['success' => $tagModel->getTagsByNoteId($noteId)]);
   exit;
 }
 
-if ($queriedTagId !== null) { // querying a tag by ID
-  $queriedTag = $tag->getById($queriedTagId);
+if ($tagId !== null) { // querying a tag by ID
+  $queriedTag = $tagModel->getById($tagId);
 
   if ($queriedTag === null) {
     http_response_code(404);
-    echo json_encode(['error' => "Tag with ID {$queriedTagId} not found."]);
+    echo json_encode(['error' => "Tag with ID {$tagId} not found."]);
   } else {
     echo json_encode(['success' => $queriedTag]);
   }
 } else {  // Querying all Tags
-  echo json_encode(['success' => $tag->getAll()]);
+  echo json_encode(['success' => $tagModel->getAll()]);
 }

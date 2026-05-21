@@ -56,10 +56,10 @@ if ($connection === null) {
   exit;
 }
 
-$note = new Note($connection);
+$noteModel = new Note($connection);
 
 if ($noteId !== null) {  // querying a note by ID
-  $queriedNote = $note->getById($noteId);
+  $queriedNote = $noteModel->getById($noteId);
 
   if ($queriedNote === null) {
     http_response_code(404);
@@ -68,11 +68,11 @@ if ($noteId !== null) {  // querying a note by ID
     echo json_encode(['success' => $queriedNote]);
   }
 } elseif ($tagId !== null && $search !== null) {  // searching all notes that contain search criteria and belong to a tag
-  echo json_encode(['success' => $note->searchByTagId($tagId, $search, $sortBy, $orderDirection)]);
+  echo json_encode(['success' => $noteModel->searchByTagId($tagId, $search, $sortBy, $orderDirection)]);
 } elseif ($tagId !== null) { // searching all notes that belong to a tag and don't have search criteria
-  echo json_encode(['success' => $note->getByTagId($tagId, $sortBy, $orderDirection)]);
+  echo json_encode(['success' => $noteModel->getByTagId($tagId, $sortBy, $orderDirection)]);
 } elseif ($search !== null) { //  search by search criteria
-  echo json_encode(['success' => $note->search($search, $sortBy, $orderDirection)]);
+  echo json_encode(['success' => $noteModel->search($search, $sortBy, $orderDirection)]);
 } else {  // querying all notes
-  echo json_encode(['success' => $note->getAll($sortBy, $orderDirection)]);
+  echo json_encode(['success' => $noteModel->getAll($sortBy, $orderDirection)]);
 }
