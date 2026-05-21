@@ -1,11 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 // src/models/Tag.php
 
 class Tag
 {
-  // properties
+  public const int MAX_NAME_LENGTH = 100;
+
   private PDO $connection;
   private string $tagsTable = 'tags';
   private string $noteTagsTable = 'note_tags';

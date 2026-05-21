@@ -22,7 +22,7 @@ class Note
 
   // create()
   // Inserts a note, returns the new note's ID
-  public function create(string $title, string $content, string $color, bool $isPinned): int
+  public function create(string $title, ?string $content, string $color, bool $isPinned): int
   {
     $stmt = $this->connection->prepare(
       "INSERT INTO {$this->notesTable} (title, content, color, is_pinned) 
@@ -103,7 +103,7 @@ class Note
 
   // update()
   // Updates a note, returns true/false
-  public function update(int $id, string $title, string $content, string $color, bool $isPinned): bool
+  public function update(int $id, string $title, ?string $content, string $color, bool $isPinned): bool
   {
     $stmt = $this->connection->prepare(
       "UPDATE {$this->notesTable} SET title = :title, content = :content, color = :color, is_pinned = :isPinned WHERE id = :id"
