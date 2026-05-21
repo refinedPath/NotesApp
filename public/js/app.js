@@ -215,6 +215,8 @@ async function init() {
     };
 
     setButtonBusy(noteSubmitBtn, true);
+    const successMessage = noteId.value === '' ? 'Note created.' : 'Note saved.';
+    const errorMessage = noteId.value === '' ? 'Cannot create note.' : 'Cannot save note.';
     try {
       if (noteId.value === '') {
         // Create note
@@ -223,10 +225,12 @@ async function init() {
         // Edit note
         await updateNote(noteId.value, payload);
       }
+      showToast({ message: successMessage, variant: 'success' });
 
       bootstrap.Modal.getOrCreateInstance(noteModal).hide();
       await reloadNotes();
     } catch (err) {
+      showToast({ message: errorMessage, variant: 'danger' });
       console.error(err);
     } finally {
       setButtonBusy(noteSubmitBtn, false);
@@ -258,8 +262,11 @@ async function init() {
     setButtonBusy(deleteBtn, true);
     try {
       await deleteNote(deleteBtn.dataset.noteId);
+      showToast({ message: 'Note deleted.', variant: 'success' });
+
       await reloadNotes();
     } catch (err) {
+      showToast({ message: 'Cannot delete note.', variant: 'danger' });
       console.error(err);
     } finally {
       setButtonBusy(deleteBtn, false);
@@ -281,11 +288,17 @@ async function init() {
       is_pinned: !currentlyPinned,
     };
 
+    const successMessage = currentlyPinned ? 'Note unpinned.' : 'Note pinned.';
+    const errorMessage = currentlyPinned ? 'Cannot unpin note.' : 'Cannot pin note.';
+
     setButtonBusy(pinBtn, true);
     try {
       await setPinned(pinBtn.dataset.noteId, payload);
+      showToast({ message: successMessage, variant: 'success' });
+
       await reloadNotes();
     } catch (err) {
+      showToast({ message: errorMessage, variant: 'danger' });
       console.error(err);
     } finally {
       setButtonBusy(pinBtn, false);
@@ -467,6 +480,7 @@ async function reloadNotes() {
     const notes = await fetchNotes();
     renderNotes(notes);
   } catch (err) {
+    showToast({ message: 'Cannot load notes.', variant: 'danger' });
     console.error(err);
   } finally {
     setNotesLoading(false);
