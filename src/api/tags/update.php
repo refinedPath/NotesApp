@@ -54,9 +54,9 @@ $tagModel = new Tag($connection);
 
 // Call update(), return JSON response with try/catch
 try {
-  $tagExists = $tagModel->getById($tagId);
+  $existingTag = $tagModel->getById($tagId);
 
-  if ($tagExists !== null) {
+  if ($existingTag !== null) {
     $tagModel->update($tagId, $name);
 
     echo json_encode(['success' => "Tag '{$name}' was updated."]);

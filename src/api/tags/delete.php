@@ -51,12 +51,12 @@ $tagModel = new Tag($connection);
 
 // Call delete(), return JSON response with try/catch
 try {
-  $tagExists = $tagModel->getById($tagId);
+  $existingTag = $tagModel->getById($tagId);
 
-  if ($tagExists !== null) {
+  if ($existingTag !== null) {
     $tagModel->delete($tagId);
 
-    echo json_encode(['success' => "Tag '{$tagExists['name']}' was deleted."]);
+    echo json_encode(['success' => "Tag '{$existingTag['name']}' was deleted."]);
   } else {
     http_response_code(404);
     echo json_encode(['error' => "Cannot delete tag. Tag with ID {$tagId} not found."]);

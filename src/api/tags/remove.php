@@ -60,16 +60,16 @@ $noteModel = new Note($connection);
 
 // Call removeFromNote(), return JSON response with try/catch
 try {
-  $tagExists = $tagModel->getById($tagId);
-  $noteExists = $noteModel->getById($noteId);
+  $existingTag = $tagModel->getById($tagId);
+  $existingNote = $noteModel->getById($noteId);
 
-  if ($tagExists === null) {
+  if ($existingTag === null) {
     http_response_code(404);
     echo json_encode(['error' => "Cannot remove tag from note. Tag with ID {$tagId} not found."]);
     exit;
   }
 
-  if ($noteExists === null) {
+  if ($existingNote === null) {
     http_response_code(404);
     echo json_encode(['error' => "Cannot remove tag from note. Note with ID {$noteId} not found."]);
     exit;
@@ -77,7 +77,7 @@ try {
 
   $removedTag = $tagModel->removeFromNote($tagId, $noteId);
 
-  echo json_encode(['success' => "Removed tag '{$tagExists['name']}' from note '{$noteExists['title']}'."]);
+  echo json_encode(['success' => "Removed tag '{$existingTag['name']}' from note '{$existingNote['title']}'."]);
 } catch (Exception $e) {
   http_response_code(500);
 
