@@ -105,20 +105,22 @@ class Note
   }
 
   // update()
-  // Updates a note, returns true/false
-  public function update(int $id, string $title, ?string $content, string $color, bool $isPinned): bool
+  // Updates a note, returns affected row count
+  public function update(int $id, string $title, ?string $content, string $color, bool $isPinned): int
   {
     $stmt = $this->connection->prepare(
       "UPDATE {$this->notesTable} SET title = :title, content = :content, color = :color, is_pinned = :isPinned WHERE id = :id"
     );
 
-    return $stmt->execute([
+    $stmt->execute([
       ':title' => $title,
       ':content' => $content,
       ':color' => $color,
       ':isPinned' => (int) $isPinned,
       ':id' => $id,
     ]);
+
+    return $stmt->rowCount();
   }
 
   // delete()
