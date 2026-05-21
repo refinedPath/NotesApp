@@ -59,13 +59,13 @@ if ($connection === null) {
 $noteModel = new Note($connection);
 
 if ($noteId !== null) {  // querying a note by ID
-  $queriedNote = $noteModel->getById($noteId);
+  $note = $noteModel->getById($noteId);
 
-  if ($queriedNote === null) {
+  if ($note === null) {
     http_response_code(404);
     echo json_encode(['error' => "Note with ID {$noteId} not found."]);
   } else {
-    echo json_encode(['success' => $queriedNote]);
+    echo json_encode(['success' => $note]);
   }
 } elseif ($tagId !== null && $search !== null) {  // searching all notes that contain search criteria and belong to a tag
   echo json_encode(['success' => $noteModel->searchByTagId($tagId, $search, $sortBy, $orderDirection)]);
