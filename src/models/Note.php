@@ -6,7 +6,10 @@ declare(strict_types=1);
 
 class Note
 {
-  // private properties
+  public const int MAX_TITLE_LENGTH = 255;
+  public const int MAX_CONTENT_LENGTH = 5000;
+  public const int MAX_COLOR_LENGTH = 7;
+
   private PDO $connection;
   private string $notesTable = 'notes';
   private string $noteTagsTable = 'note_tags';
