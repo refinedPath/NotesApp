@@ -100,6 +100,52 @@ function confirmAction({
   });
 }
 
+function showToast({
+  message,
+  variant = 'info', // success, danger, info by default
+  delay = 5000
+}) {
+  const toastContainer = document.getElementById('toastContainer');
+
+  // Defaulting to info
+  let textColor = 'text-light';
+  let borderColor = 'border-light';
+  if (variant === 'success') {
+    textColor = 'text-success';
+    borderColor = 'border-success';
+  } else if (variant === 'danger') {
+    textColor = 'text-danger';
+    borderColor = 'border-danger';
+  }
+
+  const toastBody = el('div', { classes: ['toast-body'], text: message });
+  const toastButton = el('button', {
+    classes: ['btn-close', 'me-2', 'm-auto'],
+    dataset: {
+      bsDismiss: 'toast',
+    },
+  });
+
+  const toast = el('div', {
+    classes: ['toast', 'bg-dark', textColor, borderColor],
+    attrs: {
+      'role': 'alert',
+      'aria-live': 'assertive',
+      'aria-atomic': 'true',
+    },
+    children: [el('div', {
+      classes: ['d-flex'],
+      children: [toastBody, toastButton]
+    })],
+  });
+
+  toastContainer.append(toast);
+
+  toast.addEventListener('hidden.bs.toast', () => toast.remove(), { once: true });
+
+  new bootstrap.Toast(toast, { delay }).show();
+}
+
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {

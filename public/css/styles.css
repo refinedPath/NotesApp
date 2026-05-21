@@ -73,3 +73,10 @@
 .note-card .btn-group .btn {
   width: 2rem;
 }
+
+/* Custom btn-* styling for btn-close */
+.btn-close-success {
+  --bs-btn-close-color: var(--bs-success);
+  --bs-btn-close-opacity: 1;
+  color: var(--bs-success); /* fallback */
+}
