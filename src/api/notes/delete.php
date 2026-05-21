@@ -50,7 +50,7 @@ try {
 } catch (Throwable $e) {
   http_response_code(500);
 
-  if (Config::get('APP_DEBUG') === "true") {
+  if (Config::getBool('APP_DEBUG')) {
     echo json_encode(['error' => "Cannot delete note with ID {$noteId}. Database error message: {$e->getMessage()}."]);
   } else {
     echo json_encode(['error' => "Cannot delete note with ID {$noteId}."]);

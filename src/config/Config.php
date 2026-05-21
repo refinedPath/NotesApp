@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 // src/config/Config.php
@@ -21,5 +22,15 @@ class Config
     }
 
     return isset(Config::$envFile[$property]) ? Config::$envFile[$property] : null;
+  }
+
+  public static function getBool(string $property, bool $default = false): bool
+  {
+    $value = Config::get($property);
+    if ($value === null) {
+      return $default;
+    }
+
+    return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? $default;
   }
 }

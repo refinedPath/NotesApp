@@ -64,7 +64,7 @@ try {
 } catch (Exception $e) {
   http_response_code(500);
 
-  if (Config::get('APP_DEBUG') === "true") {
+  if (Config::getBool('APP_DEBUG')) {
     echo json_encode(['error' => "Cannot delete tag with ID {$tagId}. Database error message: {$e->getMessage()}."]);
   } else {
     echo json_encode(['error' => "Cannot delete tag with ID {$tagId}."]);

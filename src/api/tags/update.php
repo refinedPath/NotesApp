@@ -68,13 +68,13 @@ try {
   if ($e->getCode() === '23000') {
     http_response_code(400);
 
-    if (Config::get('APP_DEBUG') === "true") {
+    if (Config::getBool('APP_DEBUG')) {
       echo json_encode(['error' => "Tag '{$name}' already exists. Try another name. Database error message: {$e->getMessage()}."]);
     } else {
       echo json_encode(['error' => "Tag '{$name}' already exists. Try another name."]);
     }
   } else {
-    if (Config::get('APP_DEBUG') === "true") {
+    if (Config::getBool('APP_DEBUG')) {
       http_response_code(500);
       echo json_encode(['error' => "Cannot update tag: {$e->getMessage()}."]);
     } else {

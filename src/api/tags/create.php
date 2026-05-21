@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 // src/api/tags/create.php
@@ -44,22 +45,21 @@ if ($connection === null) {
 $tag = new Tag($connection);
 
 // Call create(), return JSON response with try/catch
-try
-{
+try {
   $newTagId = $tag->create($name);
 
   echo json_encode(['success' => "Created new tag with ID {$newTagId}."]);
 } catch (Exception $e) {
   if ($e->getCode() === '23000') {
     http_response_code(400);
-    if (Config::get('APP_DEBUG') === "true") {
+    if (Config::getBool('APP_DEBUG')) {
       echo json_encode(['error' => "Tag \"{$name}\" already exists. Try another name. Database error message: {$e->getMessage()}."]);
     } else {
       echo json_encode(['error' => "Tag \"{$name}\" already exists. Try another name."]);
     }
   } else {
     http_response_code(500);
-    if (Config::get('APP_DEBUG') === "true") {
+    if (Config::getBool('APP_DEBUG')) {
       echo json_encode(['error' => "Cannot create new tag: {$e->getMessage()}."]);
     } else {
       echo json_encode(['error' => "Cannot create new tag."]);
