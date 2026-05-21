@@ -18,16 +18,16 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // Read JSON body
-if (empty($payload = file_get_contents('php://input'))) {
+if (empty($rawBody = file_get_contents('php://input'))) {
   http_response_code(400);
   echo json_encode(['error' => 'Bad request or malformed JSON.']);
   exit;
 }
 
-$payloadJson = json_decode($payload, true);
+$requestData = json_decode($rawBody, true);
 
 // Validate title
-$title = mb_trim($payloadJson['title'] ?? '');
+$title = mb_trim($requestData['title'] ?? '');
 if (empty($title)) {
   http_response_code(400);
   echo json_encode(['error' => 'Title is required.']);
@@ -40,16 +40,16 @@ if (mb_strlen($title) > 255) {
 }
 
 // Set defaults for optional fields
-$content = mb_trim($payloadJson['content'] ?? '');
+$content = mb_trim($requestData['content'] ?? '');
 if (mb_strlen($content) > 5000) {
   http_response_code(400);
   echo json_encode(['error' => 'Content cannot exceed 5000 characters.']);
   exit;
 }
 
-$color = mb_trim($payloadJson['color'] ?? $noteDefaultBackground);
+$color = mb_trim($requestData['color'] ?? $noteDefaultBackground);
 $isPinned = filter_var(
-  $payloadJson['is_pinned'] ?? false,
+  $requestData['is_pinned'] ?? false,
   FILTER_VALIDATE_BOOLEAN,
   FILTER_NULL_ON_FAILURE
 ) ?? false;

@@ -30,21 +30,21 @@ if (empty($rawBody = file_get_contents('php://input'))) {
   exit;
 }
 
-$requestBody = json_decode($rawBody, true);
-if ($requestBody === null) {
+$requestData = json_decode($rawBody, true);
+if ($requestData === null) {
   http_response_code(400);
   echo json_encode(['error' => 'Malformed JSON data.']);
   exit;
 }
 
 // Validate Pin / Unpin state
-if (!array_key_exists('is_pinned', $requestBody) || !is_bool($requestBody['is_pinned'])) {
+if (!array_key_exists('is_pinned', $requestData) || !is_bool($requestData['is_pinned'])) {
   http_response_code(400);
   echo json_encode(['error' => 'is_pinned is required and must be a boolean.']);
   exit;
 }
 
-$isPinned = $requestBody['is_pinned'];
+$isPinned = $requestData['is_pinned'];
 
 // Connect to database and Note model
 $db = new Database();

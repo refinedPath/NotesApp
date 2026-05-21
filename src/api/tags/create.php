@@ -16,16 +16,16 @@ if ($_SERVER['REQUEST_METHOD'] !== "POST") {
 }
 
 // Read JSON body
-if (empty($payload = file_get_contents('php://input'))) {
+if (empty($rawBody = file_get_contents('php://input'))) {
   http_response_code(400);
   echo json_encode(['error' => 'Bad request or malformed JSON.']);
   exit;
 }
 
-$payloadJson = json_decode($payload, true);
+$requestData = json_decode($rawBody, true);
 
 // Validate tag name
-$name = mb_trim($payloadJson['name'] ?? '');
+$name = mb_trim($requestData['name'] ?? '');
 if (empty($name)) {
   http_response_code(400);
   echo json_encode(['error' => 'Name is required.']);

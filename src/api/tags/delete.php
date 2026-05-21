@@ -22,15 +22,15 @@ if (empty($rawBody = file_get_contents('php://input'))) {
   exit;
 }
 
-$requestBody = json_decode($rawBody, true);
-if ($requestBody === null) {
+$requestData = json_decode($rawBody, true);
+if ($requestData === null) {
   http_response_code(400);
   echo json_encode(['error' => 'Malformed JSON data.']);
   exit;
 }
 
 // Validate tag ID
-$tagId = isset($requestBody['id']) ? (int) $requestBody['id'] : null;
+$tagId = isset($requestData['id']) ? (int) $requestData['id'] : null;
 if ($tagId === null) {
   http_response_code(400);
   echo json_encode(['error' => 'Tag ID is required.']);

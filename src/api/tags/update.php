@@ -16,16 +16,16 @@ if ($_SERVER['REQUEST_METHOD'] !== "PUT") {
 }
 
 // Read JSON body
-if (empty($payload = file_get_contents('php://input'))) {
+if (empty($rawBody = file_get_contents('php://input'))) {
   http_response_code(400);
   echo json_encode(['error' => 'Bad request or malformed JSON.']);
   exit;
 }
 
-$payloadArr = json_decode($payload, true);
+$requestData = json_decode($rawBody, true);
 
 // Validate tag ID
-$tagId = isset($payloadArr['id']) ? (int) $payloadArr['id'] : null;
+$tagId = isset($requestData['id']) ? (int) $requestData['id'] : null;
 if ($tagId === null) {
   http_response_code(400);
   echo json_encode(['error' => 'Tag ID is required.']);
@@ -33,7 +33,7 @@ if ($tagId === null) {
 }
 
 // Validate name
-$name = mb_trim($payloadArr['name'] ?? '');
+$name = mb_trim($requestData['name'] ?? '');
 if (empty($name)) {
   http_response_code(400);
   echo json_encode(['error' => 'Tag name is required.']);

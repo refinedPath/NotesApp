@@ -22,15 +22,15 @@ if (empty($rawBody = file_get_contents('php://input'))) {
   exit;
 }
 
-$requestBody = json_decode($rawBody, true);
-if ($requestBody === null) {
+$requestData = json_decode($rawBody, true);
+if ($requestData === null) {
   http_response_code(400);
   echo json_encode(['error' => 'Malformed JSON data.']);
   exit;
 }
 
 // Validate tag ID
-$tagId = isset($requestBody['tagId']) ? (int) $requestBody['tagId'] : null;
+$tagId = isset($requestData['tagId']) ? (int) $requestData['tagId'] : null;
 if ($tagId === null) {
   http_response_code(400);
   echo json_encode(['error' => 'Tag ID is required.']);
@@ -38,7 +38,7 @@ if ($tagId === null) {
 }
 
 // Validate note ID
-$noteId = isset($requestBody['noteId']) ? (int) $requestBody['noteId'] : null;
+$noteId = isset($requestData['noteId']) ? (int) $requestData['noteId'] : null;
 if ($noteId === null) {
   http_response_code(400);
   echo json_encode(['error' => 'Note ID is required.']);
