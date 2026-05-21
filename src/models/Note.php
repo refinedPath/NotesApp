@@ -124,16 +124,18 @@ class Note
   }
 
   // delete()
-  // Deletes a note, returns true/false
-  public function delete(int $id): bool
+  // Deletes a note, returns affected row count
+  public function delete(int $id): int
   {
     $stmt = $this->connection->prepare(
       "DELETE FROM {$this->notesTable} WHERE id = :id"
     );
 
-    return $stmt->execute([
+    $stmt->execute([
       ':id' => $id
     ]);
+
+    return $stmt->rowCount();
   }
 
   // setPinned()

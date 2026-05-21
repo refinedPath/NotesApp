@@ -91,33 +91,37 @@ class Tag
     ]);
   }
 
-  // assignToNote(int $tagId, int $noteId): bool
-  // Assigns a tag to a note
-  public function assignToNote(int $tagId, int $noteId): bool
+  // assignToNote(int $tagId, int $noteId): int
+  // Assigns a tag to a note, returns affected row count
+  public function assignToNote(int $tagId, int $noteId): int
   {
     $stmt = $this->connection->prepare(
       "INSERT IGNORE INTO {$this->noteTagsTable} (note_id, tag_id)
       VALUES (:noteId, :tagId)"
     );
 
-    return $stmt->execute([
+    $stmt->execute([
       ':noteId' => $noteId,
       ':tagId' => $tagId,
     ]);
+
+    return $stmt->rowCount();
   }
 
-  // removeFromNote(int $tagId, int $noteId): bool
-  // Removes a tag from a note
-  public function removeFromNote(int $tagId, int $noteId): bool
+  // removeFromNote(int $tagId, int $noteId): int
+  // Removes a tag from a note, returns affected row count
+  public function removeFromNote(int $tagId, int $noteId): int
   {
     $stmt = $this->connection->prepare(
       "DELETE FROM {$this->noteTagsTable} WHERE tag_id = :tagId AND note_id = :noteId"
     );
 
-    return $stmt->execute([
+    $stmt->execute([
       ':tagId' => $tagId,
       ':noteId' => $noteId,
     ]);
+
+    return $stmt->rowCount();
   }
 
   // getTagsByNoteId(int $noteId): array
