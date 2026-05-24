@@ -4,44 +4,32 @@ declare(strict_types=1);
 
 // src/api/notes/pin.php
 
-header('Content-Type: application/json');
-
 require_once __DIR__ . '/../../bootstrap.php';
 
 // Check request method is PUT
 if ($_SERVER['REQUEST_METHOD'] !== 'PUT') {
-  http_response_code(405);
-  echo json_encode(['error' => 'Method not allowed. Must use PUT.']);
-  exit;
+  Response::error('Method not allowed. Must use PUT.', 405);
 }
 
 // Validate Note ID
 $noteId = isset($_GET['id']) ? (int) $_GET['id'] : null;
 if ($noteId === null || $noteId <= 0) {
-  http_response_code(400);
-  echo json_encode(['error' => 'Note ID is required.']);
-  exit;
+  Response::error('Note ID is required.');
 }
 
 // Read JSON body
 if (empty($rawBody = file_get_contents('php://input'))) {
-  http_response_code(400);
-  echo json_encode(['error' => 'Request body is empty.']);
-  exit;
+  Response::error('Request body is empty.');
 }
 
 $requestData = json_decode($rawBody, true);
 if ($requestData === null) {
-  http_response_code(400);
-  echo json_encode(['error' => 'Malformed JSON data.']);
-  exit;
+  Response::error('Malformed JSON data.');
 }
 
 // Validate Pin / Unpin state
 if (!array_key_exists('is_pinned', $requestData) || !is_bool($requestData['is_pinned'])) {
-  http_response_code(400);
-  echo json_encode(['error' => 'is_pinned is required and must be a boolean.']);
-  exit;
+  Response::error('is_pinned is required and must be a boolean.');
 }
 
 $isPinned = $requestData['is_pinned'];
@@ -51,9 +39,7 @@ $db = new Database();
 $connection = $db->getConnection();
 
 if ($connection === null) {
-  http_response_code(500);
-  echo json_encode(['error' => 'Cannot connect to database.']);
-  exit;
+  Response::error('Cannot connect to database.', 500);
 }
 
 $noteModel = new Note($connection);
@@ -67,17 +53,14 @@ try {
 
     $updatedNote = $noteModel->getById($noteId);
 
-    echo json_encode(['success' => $updatedNote]);
+    Response::success($updatedNote);
   } else {
-    http_response_code(404);
-    echo json_encode(['error' => "Note with ID {$noteId} not found."]);
+    Response::error("Note with ID {$noteId} not found.", 404);
   }
 } catch (Throwable $e) {
-  http_response_code(500);
-
   if (Config::getBool('APP_DEBUG')) {
-    echo json_encode(['error' => "Cannot pin note with ID {$noteId}. Database error message: {$e->getMessage()}."]);
+    Response::error("Cannot pin note with ID {$noteId}. Database error message: {$e->getMessage()}.", 500);
   } else {
-    echo json_encode(['error' => "Cannot pin note with ID {$noteId}."]);
+    Response::error("Cannot pin note with ID {$noteId}.", 500);
   }
 }
