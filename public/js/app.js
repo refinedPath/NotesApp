@@ -211,7 +211,7 @@ async function init() {
       title: title.value.trim(),
       content: content.value.trim() || null,
       color: color.value,
-      is_pinned: isPinned.checked ? 1 : 0,
+      is_pinned: isPinned.checked,
     };
 
     setButtonBusy(noteSubmitBtn, true);
