@@ -44,7 +44,7 @@ class Note
   /**
    * @return array{string, string}
    */
-  private function validateSort(string $sortBy = 'created_at', string $orderDirection = 'DESC'): array
+  private function validateSort(string $sortBy, string $orderDirection): array
   {
     $allowedSortList = [
       'created_at',
