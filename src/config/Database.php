@@ -12,8 +12,8 @@ class Database
     public function __construct()
     {
       try {
-        $DSN = "mysql:host=" . Config::get('DB_HOST') . ";dbname=" . Config::get('DB_NAME') . ";charset=utf8mb4";
-        $this->connection = new PDO($DSN, Config::get('DB_USER'), Config::get('DB_PASSWORD'), [
+        $dsn = "mysql:host=" . Config::get('DB_HOST') . ";dbname=" . Config::get('DB_NAME') . ";charset=utf8mb4";
+        $this->connection = new PDO($dsn, Config::get('DB_USER'), Config::get('DB_PASSWORD'), [
           PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
           PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
         ]);
