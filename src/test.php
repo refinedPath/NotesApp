@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 // src/test.php
@@ -14,11 +15,6 @@ require_once __DIR__ . '/bootstrap.php';
 // Connect
 $db = new Database();
 $connection = $db->getConnection();
-
-if ($connection === null) {
-  echo "Failed to connect to database.\n";
-  exit;
-}
 
 $connection->exec("SET FOREIGN_KEY_CHECKS = 0");
 $connection->exec("TRUNCATE TABLE {$tableNames['noteTagsTable']}");
