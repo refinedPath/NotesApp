@@ -21,4 +21,10 @@ class Response
     echo json_encode(['error' => $message], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
     exit;
   }
+
+  public static function noContent(): never
+  {
+    http_response_code(204);
+    exit;
+  }
 }

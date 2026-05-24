@@ -34,7 +34,7 @@ try {
   if ($existingTag !== null) {
     $tagModel->delete($tagId);
 
-    Response::success(['id' => $tagId, 'deleted' => true]);
+    Response::noContent();
   } else {
     Response::error("Cannot delete tag. Tag with ID {$tagId} not found.", 404);
   }

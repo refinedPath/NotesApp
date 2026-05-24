@@ -447,12 +447,12 @@ async function updateNote(noteId, payload) {
 async function deleteNote(id) {
   const url = `${API_BASE}/notes/delete.php?id=${encodeURIComponent(id)}`;
   const response = await fetch(url, { method: 'DELETE' });
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  if (response.status === 204) return;
 
-  const data = await response.json();
-  if (data.error) throw new Error(data.error);
-
-  return data.success;
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.error ?? `HTTP ${response.status}`);
+  }
 }
 
 // Set pinned/unpinned state for a note via the API

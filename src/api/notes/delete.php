@@ -34,7 +34,7 @@ try {
   if ($existingNote !== null) {
     $noteModel->delete($noteId);
 
-    Response::success(['id' => $noteId, 'deleted' => true]);
+    Response::noContent();
   } else {
     Response::error("Cannot delete note. Note with ID {$noteId} not found.", 404);
   }
