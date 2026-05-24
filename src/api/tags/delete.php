@@ -4,47 +4,25 @@ declare(strict_types=1);
 
 // src/api/tags/delete.php
 
-header('Content-Type: application/json');
-
 require_once __DIR__ . '/../../bootstrap.php';
 
 // Check request method is DELETE
 if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
-  http_response_code(405);
-  echo json_encode(['error' => 'Method not allowed. Must use DELETE.']);
-  exit;
+  Response::error('Method not allowed. Must use DELETE.', 405);
 }
 
-// Read JSON body
-if (empty($rawBody = file_get_contents('php://input'))) {
-  http_response_code(400);
-  echo json_encode(['error' => 'Request body is empty.']);
-  exit;
+// Validate Tag ID
+$tagId = isset($_GET['id']) ? (int) $_GET['id'] : null;
+if ($tagId === null || $tagId <= 0) {
+  Response::error('Tag ID is required.');
 }
 
-$requestData = json_decode($rawBody, true);
-if ($requestData === null) {
-  http_response_code(400);
-  echo json_encode(['error' => 'Malformed JSON data.']);
-  exit;
-}
-
-// Validate tag ID
-$tagId = isset($requestData['id']) ? (int) $requestData['id'] : null;
-if ($tagId === null) {
-  http_response_code(400);
-  echo json_encode(['error' => 'Tag ID is required.']);
-  exit;
-}
-
-// Create DB connection and Tag model
+// Connect to database and create Tag model
 $db = new Database();
 $connection = $db->getConnection();
 
 if ($connection === null) {
-  http_response_code(500);
-  echo json_encode(['error' => 'Cannot connect to database.']);
-  exit;
+  Response::error('Cannot connect to database.', 500);
 }
 
 $tagModel = new Tag($connection);
@@ -56,17 +34,14 @@ try {
   if ($existingTag !== null) {
     $tagModel->delete($tagId);
 
-    echo json_encode(['success' => "Tag '{$existingTag['name']}' was deleted."]);
+    Response::success(['id' => $tagId, 'deleted' => true]);
   } else {
-    http_response_code(404);
-    echo json_encode(['error' => "Cannot delete tag. Tag with ID {$tagId} not found."]);
+    Response::error("Cannot delete tag. Tag with ID {$tagId} not found.", 404);
   }
-} catch (Exception $e) {
-  http_response_code(500);
-
+} catch (Throwable $e) {
   if (Config::getBool('APP_DEBUG')) {
-    echo json_encode(['error' => "Cannot delete tag with ID {$tagId}. Database error message: {$e->getMessage()}."]);
+    Response::error("Cannot delete tag with ID {$tagId}. Database error message: {$e->getMessage()}.", 500);
   } else {
-    echo json_encode(['error' => "Cannot delete tag with ID {$tagId}."]);
+    Response::error("Cannot delete tag with ID {$tagId}.", 500);
   }
 }
