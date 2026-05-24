@@ -68,14 +68,14 @@ try {
     }
   } else {
     if (Config::getBool('APP_DEBUG')) {
-      Response::error("Cannot update tag: {$e->getMessage()}.", 500);
+      Response::error("Cannot update tag. Database error message: {$e->getMessage()}.", 500);
     } else {
       Response::error('Cannot update tag.', 500);
     }
   }
 } catch (Throwable $e) {
   if (Config::getBool('APP_DEBUG')) {
-    Response::error("Cannot update tag: {$e->getMessage()}.", 500);
+    Response::error("Cannot update tag. Database error message: {$e->getMessage()}.", 500);
   } else {
     Response::error('Cannot update tag.', 500);
   }
