@@ -17,10 +17,6 @@ class Database
           PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
           PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
         ]);
-        $this->connection->exec("SET NAMES 'utf8mb4'");
-        $this->connection->exec("SET collation_connection = 'utf8mb4_general_ci'");
-        $this->connection->exec("SET character_set_client = 'utf8mb4'");
-        $this->connection->exec("SET character_set_results = 'utf8mb4'");
       } catch (PDOException $e) {
         echo "Connection error: " . $e->getMessage();
       }
