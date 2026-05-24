@@ -4,55 +4,31 @@ declare(strict_types=1);
 
 // src/api/tags/remove.php
 
-header('Content-Type: application/json');
-
 require_once __DIR__ . '/../../bootstrap.php';
 
 // Check request method is DELETE
 if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
-  http_response_code(405);
-  echo json_encode(['error' => 'Method not allowed. Must use DELETE.']);
-  exit;
+  Response::error('Method not allowed. Must use DELETE.', 405);
 }
 
-// Read JSON body
-if (empty($rawBody = file_get_contents('php://input'))) {
-  http_response_code(400);
-  echo json_encode(['error' => 'Request body is empty.']);
-  exit;
+// Validate Tag ID
+$tagId = isset($_GET['tagId']) ? (int) $_GET['tagId'] : null;
+if ($tagId === null || $tagId <= 0) {
+  Response::error('Tag ID is required.');
 }
 
-$requestData = json_decode($rawBody, true);
-if ($requestData === null) {
-  http_response_code(400);
-  echo json_encode(['error' => 'Malformed JSON data.']);
-  exit;
+// Validate Note ID
+$noteId = isset($_GET['noteId']) ? (int) $_GET['noteId'] : null;
+if ($noteId === null || $noteId <= 0) {
+  Response::error('Note ID is required.');
 }
 
-// Validate tag ID
-$tagId = isset($requestData['tagId']) ? (int) $requestData['tagId'] : null;
-if ($tagId === null) {
-  http_response_code(400);
-  echo json_encode(['error' => 'Tag ID is required.']);
-  exit;
-}
-
-// Validate note ID
-$noteId = isset($requestData['noteId']) ? (int) $requestData['noteId'] : null;
-if ($noteId === null) {
-  http_response_code(400);
-  echo json_encode(['error' => 'Note ID is required.']);
-  exit;
-}
-
-// Create DB connection and tag and note models
+// Connect to database and create Tag and Note models
 $db = new Database();
 $connection = $db->getConnection();
 
 if ($connection === null) {
-  http_response_code(500);
-  echo json_encode(['error' => 'Cannot connect to database.']);
-  exit;
+  Response::error('Cannot connect to database.', 500);
 }
 
 $tagModel = new Tag($connection);
@@ -64,26 +40,20 @@ try {
   $existingNote = $noteModel->getById($noteId);
 
   if ($existingTag === null) {
-    http_response_code(404);
-    echo json_encode(['error' => "Cannot remove tag from note. Tag with ID {$tagId} not found."]);
-    exit;
+    Response::error("Cannot remove tag. Tag with ID {$tagId} not found.", 404);
   }
 
   if ($existingNote === null) {
-    http_response_code(404);
-    echo json_encode(['error' => "Cannot remove tag from note. Note with ID {$noteId} not found."]);
-    exit;
+    Response::error("Cannot remove tag. Note with ID {$noteId} not found.", 404);
   }
 
-  $removedTag = $tagModel->removeFromNote($tagId, $noteId);
+  $tagModel->removeFromNote($tagId, $noteId);
 
-  echo json_encode(['success' => "Removed tag '{$existingTag['name']}' from note '{$existingNote['title']}'."]);
-} catch (Exception $e) {
-  http_response_code(500);
-
+  Response::success(['tagId' => $tagId, 'noteId' => $noteId, 'removed' => true]);
+} catch (Throwable $e) {
   if (Config::getBool('APP_DEBUG')) {
-    echo json_encode(['error' => "Cannot remove tag with ID {$tagId} from note with ID {$noteId}. Database error message: {$e->getMessage()}."]);
+    Response::error("Cannot remove tag with ID {$tagId} from note with ID {$noteId}. Database error message: {$e->getMessage()}.", 500);
   } else {
-    echo json_encode(['error' => "Cannot remove tag with ID {$tagId} from note with ID {$noteId}."]);
+    Response::error("Cannot remove tag with ID {$tagId} from note with ID {$noteId}.", 500);
   }
 }
