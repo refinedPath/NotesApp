@@ -4,33 +4,25 @@ declare(strict_types=1);
 
 // src/api/notes/delete.php
 
-header('Content-Type: application/json');
-
 require_once __DIR__ . '/../../bootstrap.php';
 
 // Check request method is DELETE
 if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
-  http_response_code(405);
-  echo json_encode(['error' => 'Method not allowed. Must use DELETE.']);
-  exit;
+  Response::error('Method not allowed. Must use DELETE.', 405);
 }
 
 // Validate note ID
 $noteId = isset($_GET['id']) ? (int) $_GET['id'] : null;
 if ($noteId === null || $noteId <= 0) {
-  http_response_code(400);
-  echo json_encode(['error' => 'Note ID is required.']);
-  exit;
+  Response::error('Note ID is required.');
 }
 
-// Create DB connection and Note model
+// Connect to database and create Note model
 $db = new Database();
 $connection = $db->getConnection();
 
 if ($connection === null) {
-  http_response_code(500);
-  echo json_encode(['error' => 'Cannot connect to database.']);
-  exit;
+  Response::error('Cannot connect to database.', 500);
 }
 
 $noteModel = new Note($connection);
@@ -42,17 +34,14 @@ try {
   if ($existingNote !== null) {
     $noteModel->delete($noteId);
 
-    echo json_encode(['success' => ['id' => $noteId, 'deleted' => true]]);
+    Response::success(['id' => $noteId, 'deleted' => true]);
   } else {
-    http_response_code(404);
-    echo json_encode(['error' => "Cannot delete note. Note with ID {$noteId} not found."]);
+    Response::error("Cannot delete note. Note with ID {$noteId} not found.", 404);
   }
 } catch (Throwable $e) {
-  http_response_code(500);
-
   if (Config::getBool('APP_DEBUG')) {
-    echo json_encode(['error' => "Cannot delete note with ID {$noteId}. Database error message: {$e->getMessage()}."]);
+    Response::error("Cannot delete note with ID {$noteId}. Database error message: {$e->getMessage()}.", 500);
   } else {
-    echo json_encode(['error' => "Cannot delete note with ID {$noteId}."]);
+    Response::error("Cannot delete note with ID {$noteId}.", 500);
   }
 }
