@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 // src/api/notes/create.php
 
-header("Content-Type: application/json");
+header('Content-Type: application/json');
 
 $noteDefaultBackground = '#212529';
 
@@ -79,6 +79,6 @@ try {
   if (Config::getBool('APP_DEBUG')) {
     echo json_encode(['error' => "Cannot create new note. Database error message: {$e->getMessage()}."]);
   } else {
-    echo json_encode(['error' => "Cannot create new note."]);
+    echo json_encode(['error' => 'Cannot create new note.']);
   }
 }

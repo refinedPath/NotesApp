@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 // src/api/notes/delete.php
 
-header("Content-Type: application/json");
+header('Content-Type: application/json');
 
 require_once __DIR__ . '/../../bootstrap.php';
 
 // Check request method is DELETE
-if ($_SERVER['REQUEST_METHOD'] !== "DELETE") {
+if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
   http_response_code(405);
   echo json_encode(['error' => 'Method not allowed. Must use DELETE.']);
   exit;

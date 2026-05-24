@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 // src/api/tags/assign.php
 
-header("Content-Type: application/json");
+header('Content-Type: application/json');
 
 require_once __DIR__ . '/../../bootstrap.php';
 
 // Check request method is POST
-if ($_SERVER['REQUEST_METHOD'] !== "POST") {
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
   http_response_code(405);
   echo json_encode(['error' => 'Method not allowed. Must use POST.']);
   exit;

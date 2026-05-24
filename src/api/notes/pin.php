@@ -9,7 +9,7 @@ header('Content-Type: application/json');
 require_once __DIR__ . '/../../bootstrap.php';
 
 // Check request method is PUT
-if ($_SERVER['REQUEST_METHOD'] !== "PUT") {
+if ($_SERVER['REQUEST_METHOD'] !== 'PUT') {
   http_response_code(405);
   echo json_encode(['error' => 'Method not allowed. Must use PUT.']);
   exit;
@@ -76,7 +76,7 @@ try {
   http_response_code(500);
 
   if (Config::getBool('APP_DEBUG')) {
-    echo json_encode(['error' => "Cannot pin note with ID {$noteId}. Database error message: {$e->getMessage()}"]);
+    echo json_encode(['error' => "Cannot pin note with ID {$noteId}. Database error message: {$e->getMessage()}."]);
   } else {
     echo json_encode(['error' => "Cannot pin note with ID {$noteId}."]);
   }

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 // src/api/tags/read.php
 
-header("Content-Type: application/json");
+header('Content-Type: application/json');
 
 require_once __DIR__ . '/../../bootstrap.php';
 
 // Check request method is GET
-if ($_SERVER['REQUEST_METHOD'] !== "GET") {
+if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
   http_response_code(405);
   echo json_encode(['error' => 'Method not allowed. Must use GET.']);
   exit;

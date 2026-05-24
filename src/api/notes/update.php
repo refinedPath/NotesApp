@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 // src/api/notes/update.php
 
-header("Content-Type: application/json");
+header('Content-Type: application/json');
 
 $noteDefaultBackground = '#212529';
 
 require_once __DIR__ . '/../../bootstrap.php';
 
 // Check request method is PUT
-if ($_SERVER['REQUEST_METHOD'] !== "PUT") {
+if ($_SERVER['REQUEST_METHOD'] !== 'PUT') {
   http_response_code(405);
   echo json_encode(['error' => 'Method not allowed. Must use PUT.']);
   exit;
