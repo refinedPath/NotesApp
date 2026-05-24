@@ -34,18 +34,13 @@ if (!array_key_exists('is_pinned', $requestData) || !is_bool($requestData['is_pi
 
 $isPinned = $requestData['is_pinned'];
 
-// Connect to database and create Note model
-$db = new Database();
-$connection = $db->getConnection();
-
-if ($connection === null) {
-  Response::error('Cannot connect to database.', 500);
-}
-
-$noteModel = new Note($connection);
-
-// Call setPinned(), return JSON response with try/catch
 try {
+  // Connect to database and create Note model
+  $db = new Database();
+  $connection = $db->getConnection();
+
+  $noteModel = new Note($connection);
+
   $existingNote = $noteModel->getById($noteId);
 
   if ($existingNote !== null) {

@@ -30,18 +30,13 @@ if (mb_strlen($name) > Tag::MAX_NAME_LENGTH) {
   Response::error(sprintf('Tag name cannot exceed %d characters.', Tag::MAX_NAME_LENGTH));
 }
 
-// Connect to database and create Tag model
-$db = new Database();
-$connection = $db->getConnection();
-
-if ($connection === null) {
-  Response::error('Cannot connect to database.', 500);
-}
-
-$tagModel = new Tag($connection);
-
-// Call create(), return JSON response with try/catch
 try {
+  // Connect to database and create Tag model
+  $db = new Database();
+  $connection = $db->getConnection();
+
+  $tagModel = new Tag($connection);
+
   $newTagId = $tagModel->create($name);
 
   $newTag = $tagModel->getById($newTagId);

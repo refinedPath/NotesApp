@@ -17,18 +17,13 @@ if ($tagId === null || $tagId <= 0) {
   Response::error('Tag ID is required.');
 }
 
-// Connect to database and create Tag model
-$db = new Database();
-$connection = $db->getConnection();
-
-if ($connection === null) {
-  Response::error('Cannot connect to database.', 500);
-}
-
-$tagModel = new Tag($connection);
-
-// Call delete(), return JSON response with try/catch
 try {
+  // Connect to database and create Tag model
+  $db = new Database();
+  $connection = $db->getConnection();
+
+  $tagModel = new Tag($connection);
+
   $existingTag = $tagModel->getById($tagId);
 
   if ($existingTag !== null) {

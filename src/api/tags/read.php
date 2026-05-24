@@ -28,17 +28,13 @@ if ($tagId !== null && $noteId !== null) {
   Response::error('Cannot use both id and noteId parameters. Use one at a time.');
 }
 
-// Connect to database and create tag model
-$db = new Database();
-$connection = $db->getConnection();
-
-if ($connection === null) {
-  Response::error('Cannot connect to database.', 500);
-}
-
-$tagModel = new Tag($connection);
-
 try {
+  // Connect to database and create tag model
+  $db = new Database();
+  $connection = $db->getConnection();
+
+  $tagModel = new Tag($connection);
+
   if ($noteId !== null) { // querying all tags that belong to a note and exiting
     Response::success($tagModel->getTagsByNoteId($noteId));
   } elseif ($tagId !== null) { // querying a tag by ID

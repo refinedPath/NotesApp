@@ -23,19 +23,14 @@ if ($noteId === null || $noteId <= 0) {
   Response::error('Note ID is required.');
 }
 
-// Connect to database and create Tag and Note models
-$db = new Database();
-$connection = $db->getConnection();
-
-if ($connection === null) {
-  Response::error('Cannot connect to database.', 500);
-}
-
-$tagModel = new Tag($connection);
-$noteModel = new Note($connection);
-
-// Call removeFromNote(), return JSON response with try/catch
 try {
+  // Connect to database and create Tag and Note models
+  $db = new Database();
+  $connection = $db->getConnection();
+
+  $tagModel = new Tag($connection);
+  $noteModel = new Note($connection);
+
   $existingTag = $tagModel->getById($tagId);
   $existingNote = $noteModel->getById($noteId);
 

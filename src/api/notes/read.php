@@ -44,17 +44,13 @@ if ($search !== null) {
   }
 }
 
-// Connect to database and create Note model
-$db = new Database();
-$connection = $db->getConnection();
-
-if ($connection === null) {
-  Response::error('Cannot connect to database.', 500);
-}
-
-$noteModel = new Note($connection);
-
 try {
+  // Connect to database and create Note model
+  $db = new Database();
+  $connection = $db->getConnection();
+
+  $noteModel = new Note($connection);
+
   if ($noteId !== null) {  // querying a note by ID
     $existingNote = $noteModel->getById($noteId);
 
