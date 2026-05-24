@@ -47,7 +47,7 @@ try {
   $newTag = $tagModel->getById($newTagId);
 
   Response::success($newTag, 201);
-} catch (Throwable $e) {
+} catch (PDOException $e) {
   if ($e->getCode() === '23000') {
     if (Config::getBool('APP_DEBUG')) {
       Response::error("Tag '{$name}' already exists. Try another name. Database error message: {$e->getMessage()}.");
@@ -58,7 +58,13 @@ try {
     if (Config::getBool('APP_DEBUG')) {
       Response::error("Cannot create new tag: {$e->getMessage()}.", 500);
     } else {
-      Response::error("Cannot create new tag.", 500);
+      Response::error('Cannot create new tag.', 500);
     }
+  }
+} catch (Throwable $e) {
+  if (Config::getBool('APP_DEBUG')) {
+    Response::error("Cannot create new tag: {$e->getMessage()}.", 500);
+  } else {
+    Response::error('Cannot create new tag.', 500);
   }
 }

@@ -59,7 +59,7 @@ try {
   } else {
     Response::error("Cannot update tag. Tag with ID {$tagId} not found.", 404);
   }
-} catch (Throwable $e) {
+} catch (PDOException $e) {
   if ($e->getCode() === '23000') {
     if (Config::getBool('APP_DEBUG')) {
       Response::error("Tag '{$name}' already exists. Try another name. Database error message: {$e->getMessage()}.");
@@ -72,5 +72,11 @@ try {
     } else {
       Response::error('Cannot update tag.', 500);
     }
+  }
+} catch (Throwable $e) {
+  if (Config::getBool('APP_DEBUG')) {
+    Response::error("Cannot update tag: {$e->getMessage()}.", 500);
+  } else {
+    Response::error('Cannot update tag.', 500);
   }
 }
