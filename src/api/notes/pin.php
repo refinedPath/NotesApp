@@ -46,7 +46,7 @@ if (!array_key_exists('is_pinned', $requestData) || !is_bool($requestData['is_pi
 
 $isPinned = $requestData['is_pinned'];
 
-// Connect to database and Note model
+// Connect to database and create Note model
 $db = new Database();
 $connection = $db->getConnection();
 
