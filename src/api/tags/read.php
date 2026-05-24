@@ -46,13 +46,13 @@ if ($noteId !== null) { // querying all tags that belong to a note and exiting
 }
 
 if ($tagId !== null) { // querying a tag by ID
-  $tag = $tagModel->getById($tagId);
+  $existingTag = $tagModel->getById($tagId);
 
-  if ($tag === null) {
+  if ($existingTag === null) {
     http_response_code(404);
     echo json_encode(['error' => "Tag with ID {$tagId} not found."]);
   } else {
-    echo json_encode(['success' => $tag]);
+    echo json_encode(['success' => $existingTag]);
   }
 } else {  // Querying all Tags
   echo json_encode(['success' => $tagModel->getAll()]);
