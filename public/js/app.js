@@ -34,20 +34,20 @@ function setButtonBusy(btn, isBusy) {
   if (isBusy) {
     btn.disabled = true;
 
-    const currentButtonIcon = btn.querySelector('i');
-    if (currentButtonIcon) {
+    const icon = btn.querySelector('i');
+    if (icon) {
       const spinner = document.createElement('span');
       spinner.classList.add('spinner-border', 'spinner-border-sm', 'js-busy-button-spinner');
       if (btn.textContent.trim()) {
         spinner.classList.add('me-1');
       }
-      currentButtonIcon.classList.add('d-none', 'js-hidden-icon');
-      currentButtonIcon.before(spinner);
+      icon.classList.add('d-none', 'js-hidden-icon');
+      icon.before(spinner);
     }
   } else {
-    const currentButtonIcon = btn.querySelector('.js-busy-button-spinner');
-    if (currentButtonIcon) {
-      currentButtonIcon.remove();
+    const spinner = btn.querySelector('.js-busy-button-spinner');
+    if (spinner) {
+      spinner.remove();
       btn.querySelector('.js-hidden-icon').classList.remove('d-none', 'js-hidden-icon');
     }
 
