@@ -64,31 +64,35 @@ class Tag
     return $stmt->fetch() ?: null;
   }
 
-  // update(int $id, string $name): bool
-  // Updates a tag, returns true/false
-  public function update(int $id, string $name): bool
+  // update(int $id, string $name): int
+  // Updates a tag, returns affected row count
+  public function update(int $id, string $name): int
   {
     $stmt = $this->connection->prepare(
       "UPDATE {$this->tagsTable} SET name = :name WHERE id = :id"
     );
 
-    return $stmt->execute([
+    $stmt->execute([
       ':id' => $id,
       ':name' => $name,
     ]);
+
+    return $stmt->rowCount();
   }
 
-  // delete(int $id): bool
-  // Deletes a tag, returns true/false
-  public function delete(int $id): bool
+  // delete(int $id): int
+  // Deletes a tag, returns affected row count
+  public function delete(int $id): int
   {
     $stmt = $this->connection->prepare(
       "DELETE FROM {$this->tagsTable} WHERE id = :id"
     );
 
-    return $stmt->execute([
+    $stmt->execute([
       ':id' => $id,
     ]);
+
+    return $stmt->rowCount();
   }
 
   // assignToNote(int $tagId, int $noteId): int
