@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 // src/api/notes/create.php
 
-$noteDefaultBackground = '#212529';
-
 require_once __DIR__ . '/../../bootstrap.php';
 
 // Check request method is POST
@@ -41,7 +39,7 @@ if ($content === '') {
   $content = null;
 }
 
-$color = mb_trim($requestData['color'] ?? $noteDefaultBackground);
+$color = mb_trim($requestData['color'] ?? Note::DEFAULT_COLOR);
 if (!preg_match('/^#[0-9a-fA-F]{6}$/', $color)) {
   Response::error('Note color must be in hex format (#RRGGBB).');
 }

@@ -9,6 +9,7 @@ class Note
   public const int MAX_TITLE_LENGTH = 255;
   public const int MAX_CONTENT_LENGTH = 5000;
   public const int MAX_COLOR_LENGTH = 7;
+  public const string DEFAULT_COLOR = '#212529';
 
   private PDO $connection;
   private string $notesTable = 'notes';
