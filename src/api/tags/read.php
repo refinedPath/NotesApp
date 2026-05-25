@@ -34,9 +34,10 @@ try {
   $connection = $db->getConnection();
 
   $tagModel = new Tag($connection);
+  $noteTagModel = new NoteTag($connection);
 
   if ($noteId !== null) { // querying all tags that belong to a note and exiting
-    Response::success($tagModel->getTagsByNoteId($noteId));
+    Response::success($noteTagModel->tagsForNote($noteId));
   } elseif ($tagId !== null) { // querying a tag by ID
     $existingTag = $tagModel->getById($tagId);
 

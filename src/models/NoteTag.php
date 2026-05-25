@@ -61,4 +61,22 @@ class NoteTag
 
     return $stmt->rowCount();
   }
+
+  // Returns all tags assigned to a note
+  /** @return array<int, array<string, mixed>> */
+  public function tagsForNote(int $noteId): array
+  {
+    $stmt = $this->connection->prepare(
+      "SELECT {$this->tagsTable}.* FROM {$this->tagsTable} 
+        JOIN {$this->noteTagsTable} ON {$this->tagsTable}.id = {$this->noteTagsTable}.tag_id
+        WHERE {$this->noteTagsTable}.note_id = :noteId
+        ORDER BY {$this->tagsTable}.name"
+    );
+
+    $stmt->execute([
+      ':noteId' => $noteId,
+    ]);
+
+    return $stmt->fetchAll();
+  }
 }
