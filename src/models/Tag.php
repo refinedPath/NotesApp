@@ -14,13 +14,11 @@ class Tag
   private string $tagsTable = 'tags';
   private string $noteTagsTable = 'note_tags';
 
-  // constructor
   public function __construct(PDO $connection)
   {
     $this->connection = $connection;
   }
 
-  // create(string $name, string $color): int
   // Inserts a tag, returns the new tag's ID
   public function create(string $name, string $color): int
   {
@@ -37,7 +35,6 @@ class Tag
     return (int) $this->connection->lastInsertId();
   }
 
-  // getAll(): array
   // Returns all tags, ordered by name ASC
   /** @return array<int, array<string, mixed>> */
   public function getAll(): array
@@ -51,7 +48,6 @@ class Tag
     return $stmt->fetchAll();
   }
 
-  // getById(int $id): ?array
   // Returns one tag by ID, or null if not found
   /** @return array<string, mixed>|null */
   public function getById(int $id): ?array
@@ -67,7 +63,6 @@ class Tag
     return $stmt->fetch() ?: null;
   }
 
-  // update(int $id, string $name, string $color): int
   // Updates a tag, returns affected row count
   public function update(int $id, string $name, string $color): int
   {
@@ -84,7 +79,6 @@ class Tag
     return $stmt->rowCount();
   }
 
-  // delete(int $id): int
   // Deletes a tag, returns affected row count
   public function delete(int $id): int
   {
@@ -99,7 +93,6 @@ class Tag
     return $stmt->rowCount();
   }
 
-  // assignToNote(int $tagId, int $noteId): int
   // Assigns a tag to a note, returns affected row count
   public function assignToNote(int $tagId, int $noteId): int
   {
@@ -116,7 +109,6 @@ class Tag
     return $stmt->rowCount();
   }
 
-  // removeFromNote(int $tagId, int $noteId): int
   // Removes a tag from a note, returns affected row count
   public function removeFromNote(int $tagId, int $noteId): int
   {
@@ -132,7 +124,6 @@ class Tag
     return $stmt->rowCount();
   }
 
-  // getTagsByNoteId(int $noteId): array
   // Returns all tags assigned to a note
   /** @return array<int, array<string, mixed>> */
   public function getTagsByNoteId(int $noteId): array

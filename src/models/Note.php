@@ -15,13 +15,11 @@ class Note
   private string $notesTable = 'notes';
   private string $noteTagsTable = 'note_tags';
 
-  // constructor
   public function __construct(PDO $connection)
   {
     $this->connection = $connection;
   }
 
-  // create()
   // Inserts a note, returns the new note's ID
   public function create(string $title, ?string $content, string $color, bool $isPinned): int
   {
@@ -40,7 +38,6 @@ class Note
     return (int) $this->connection->lastInsertId();
   }
 
-  // validateSort()
   // Validates sorting and order directions
   /**
    * @return array{string, string}
@@ -70,7 +67,6 @@ class Note
     ];
   }
 
-  // getAll()
   // Returns all notes, ordered by is_pinned DESC, then created_at DESC
   /** @return array<int, array<string, mixed>> */
   public function getAll(string $sortBy = 'created_at', string $orderDirection = 'DESC'): array
@@ -89,7 +85,6 @@ class Note
     return $stmt->fetchAll();
   }
 
-  // getById()
   // Returns one note by ID, or null if not found
   /** @return array<string, mixed>|null */
   public function getById(int $id): ?array
@@ -105,7 +100,6 @@ class Note
     return $stmt->fetch() ?: null;
   }
 
-  // update()
   // Updates a note, returns affected row count
   public function update(int $id, string $title, ?string $content, string $color, bool $isPinned): int
   {
@@ -124,7 +118,6 @@ class Note
     return $stmt->rowCount();
   }
 
-  // delete()
   // Deletes a note, returns affected row count
   public function delete(int $id): int
   {
@@ -139,7 +132,6 @@ class Note
     return $stmt->rowCount();
   }
 
-  // setPinned()
   // Sets a note's pinned state, returns rowCount()
   public function setPinned(int $id, bool $isPinned): int
   {
@@ -155,7 +147,6 @@ class Note
     return $stmt->rowCount();
   }
 
-  // getByTagId()
   // Returns all notes that have a tag
   /** @return array<int, array<string, mixed>> */
   public function getByTagId(int $tagId, string $sortBy = 'created_at', string $orderDirection = 'DESC'): array
@@ -179,7 +170,6 @@ class Note
     return $stmt->fetchAll();
   }
 
-  // search()
   // Return all notes according to search criteria
   /** @return array<int, array<string, mixed>> */
   public function search(string $keyword, string $sortBy = 'created_at', string $orderDirection = 'DESC'): array
@@ -205,7 +195,6 @@ class Note
     return $stmt->fetchAll();
   }
 
-  // searchByTagId
   // Return all tagged notes according to search criteria
   /** @return array<int, array<string, mixed>> */
   public function searchByTagId(int $tagId, string $keyword, string $sortBy = 'created_at', string $orderDirection = 'DESC'): array
