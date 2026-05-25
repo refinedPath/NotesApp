@@ -30,6 +30,12 @@ if (mb_strlen($name) > Tag::MAX_NAME_LENGTH) {
   Response::error(sprintf('Tag name cannot exceed %d characters.', Tag::MAX_NAME_LENGTH));
 }
 
+// Validate color
+$color = mb_trim($requestData['color'] ?? Tag::DEFAULT_COLOR);
+if (!Validator::isHexColor($color)) {
+  Response::error('Tag color must be in hex format (#RRGGBB).');
+}
+
 try {
   // Connect to database and create Tag model
   $db = new Database();
@@ -37,7 +43,7 @@ try {
 
   $tagModel = new Tag($connection);
 
-  $newTagId = $tagModel->create($name);
+  $newTagId = $tagModel->create($name, $color);
 
   $newTag = $tagModel->getById($newTagId);
 
