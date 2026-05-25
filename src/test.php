@@ -30,8 +30,8 @@ $noteId = $note->create('My first note', 'This is a test note.', '#ff5733', fals
 echo "Created note with ID {$noteId}\n";
 
 // Test 2: Create tags
-$tagId1 = $tag->create('urgent');
-$tagId2 = $tag->create('personal');
+$tagId1 = $tag->create('urgent', Tag::DEFAULT_COLOR);
+$tagId2 = $tag->create('personal', '#0d6efd');
 echo "Created tags with IDs {$tagId1} and {$tagId2}.\n";
 
 // Test 3: Assign tags to note
