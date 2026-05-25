@@ -169,12 +169,12 @@ async function init() {
   const noteModalTitle = document.getElementById('noteModalTitle');
   const noteForm = document.getElementById('noteForm');
   const noteId = document.getElementById('noteId');
-  const title = document.getElementById('title');
-  const titleCharCounter = document.getElementById('titleCounter');
-  const content = document.getElementById('content');
-  const contentCharCounter = document.getElementById('contentCounter');
-  const color = document.getElementById('color');
-  const isPinned = document.getElementById('isPinned');
+  const noteTitle = document.getElementById('noteTitle');
+  const noteTitleCounter = document.getElementById('noteTitleCounter');
+  const noteContent = document.getElementById('noteContent');
+  const noteContentCounter = document.getElementById('noteContentCounter');
+  const noteColor = document.getElementById('noteColor');
+  const noteIsPinned = document.getElementById('noteIsPinned');
   const noteSubmitBtn = document.getElementById('noteSubmitBtn');
   const notesGrid = document.getElementById('notesGrid');
 
@@ -188,29 +188,29 @@ async function init() {
     if (mode === "create") {
       noteModalTitle.textContent = 'New note';
       noteId.value = '';
-      title.value = '';
-      content.value = '';
-      color.value = '#212529';
-      isPinned.checked = false;
+      noteTitle.value = '';
+      noteContent.value = '';
+      noteColor.value = '#212529';
+      noteIsPinned.checked = false;
       noteSubmitBtn.replaceChildren(el('i', { classes: ['bi', 'bi-plus-circle', 'me-1'] }), 'Create');
     } else if (mode === "edit") {
       const dataset = trigger.dataset;
 
       noteModalTitle.textContent = 'Edit note';
       noteId.value = dataset.noteId;
-      title.value = dataset.title;
-      content.value = dataset.content;
-      color.value = dataset.color;
-      isPinned.checked = dataset.pinned === "true";
+      noteTitle.value = dataset.title;
+      noteContent.value = dataset.content;
+      noteColor.value = dataset.color;
+      noteIsPinned.checked = dataset.pinned === "true";
       noteSubmitBtn.replaceChildren(el('i', { classes: ['bi', 'bi-check-circle', 'me-1'] }), 'Save');
     }
 
-    titleCharCounter.textContent = title.value.length + " / 255";
-    contentCharCounter.textContent = content.value.length + " / 5000";
+    noteTitleCounter.textContent = noteTitle.value.length + " / 255";
+    noteContentCounter.textContent = noteContent.value.length + " / 5000";
   });
 
   noteModal.addEventListener('shown.bs.modal', () => {
-    title.focus();
+    noteTitle.focus();
   });
 
   // Initial render
@@ -223,10 +223,10 @@ async function init() {
     setNoteModalError('');
 
     const payload = {
-      title: title.value.trim(),
-      content: content.value.trim() || null,
-      color: color.value,
-      is_pinned: isPinned.checked,
+      title: noteTitle.value.trim(),
+      content: noteContent.value.trim() || null,
+      color: noteColor.value,
+      is_pinned: noteIsPinned.checked,
     };
 
     setButtonBusy(noteSubmitBtn, true);
@@ -252,13 +252,13 @@ async function init() {
   });
 
   // Create or Edit note Title live char counter
-  title.addEventListener('input', () => {
-    titleCharCounter.textContent = title.value.length + " / 255";
+  noteTitle.addEventListener('input', () => {
+    noteTitleCounter.textContent = noteTitle.value.length + " / 255";
   });
 
   // Create or Edit note Content live char counter
-  content.addEventListener('input', () => {
-    contentCharCounter.textContent = content.value.length + " / 5000";
+  noteContent.addEventListener('input', () => {
+    noteContentCounter.textContent = noteContent.value.length + " / 5000";
   });
 
   // Delete a note

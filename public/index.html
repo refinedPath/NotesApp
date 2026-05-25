@@ -80,27 +80,27 @@
           <form id="noteForm" name="noteForm">
             <div class="mb-3">
               <input type="hidden" id="noteId" name="noteId">
-              <label for="title" class="form-label">Title</label>
-              <input type="text" class="form-control" id="title" name="title" placeholder="Title (required)" required
-                maxlength="255" aria-describedby="titleCounter">
-              <div class="form-text text-end" id="titleCounter">0 / 255</div>
+              <label for="noteTitle" class="form-label">Title</label>
+              <input type="text" class="form-control" id="noteTitle" name="title" placeholder="Title (required)"
+                required maxlength="255" aria-describedby="noteTitleCounter">
+              <div class="form-text text-end" id="noteTitleCounter">0 / 255</div>
             </div>
 
             <div class="mb-3">
-              <label for="content" class="form-label">Content</label>
-              <textarea class="form-control" id="content" name="content" rows="4" placeholder="Content (optional)"
-                maxlength="5000" aria-describedby="contentCounter"></textarea>
-              <div class="form-text text-end" id="contentCounter">0 / 5000</div>
+              <label for="noteContent" class="form-label">Content</label>
+              <textarea class="form-control" id="noteContent" name="content" rows="4" placeholder="Content (optional)"
+                maxlength="5000" aria-describedby="noteContentCounter"></textarea>
+              <div class="form-text text-end" id="noteContentCounter">0 / 5000</div>
             </div>
 
             <div class="mb-3">
-              <label for="color" class="form-label">Color</label>
-              <input type="color" class="form-control" id="color" name="color" value="#212529">
+              <label for="noteColor" class="form-label">Color</label>
+              <input type="color" class="form-control" id="noteColor" name="color" value="#212529">
             </div>
 
             <div class="mb-3 form-check">
-              <input type="checkbox" class="form-check-input" id="isPinned" name="isPinned">
-              <label for="isPinned" class="form-check-label">Pin note</label>
+              <input type="checkbox" class="form-check-input" id="noteIsPinned" name="isPinned">
+              <label for="noteIsPinned" class="form-check-label">Pin note</label>
             </div>
           </form>
         </div>
