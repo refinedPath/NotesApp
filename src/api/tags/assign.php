@@ -30,6 +30,7 @@ try {
 
   $tagModel = new Tag($connection);
   $noteModel = new Note($connection);
+  $noteTagModel = new NoteTag($connection);
 
   $existingTag = $tagModel->getById($tagId);
   $existingNote = $noteModel->getById($noteId);
@@ -42,7 +43,7 @@ try {
     Response::error("Cannot assign tag. Note with ID {$noteId} not found.", 404);
   }
 
-  $tagModel->assignToNote($tagId, $noteId);
+  $noteTagModel->assignToNote($tagId, $noteId);
 
   Response::success(['tagId' => $tagId, 'noteId' => $noteId, 'assigned' => true]);
 } catch (Throwable $e) {

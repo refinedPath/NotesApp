@@ -30,4 +30,20 @@ class NoteTag
 
     return $stmt->fetchAll();
   }
+
+  // Assigns a tag to a note, returns affected row count
+  public function assignToNote(int $tagId, int $noteId): int
+  {
+    $stmt = $this->connection->prepare(
+      "INSERT IGNORE INTO {$this->noteTagsTable} (note_id, tag_id)
+      VALUES (:noteId, :tagId)"
+    );
+
+    $stmt->execute([
+      ':noteId' => $noteId,
+      ':tagId' => $tagId,
+    ]);
+
+    return $stmt->rowCount();
+  }
 }
