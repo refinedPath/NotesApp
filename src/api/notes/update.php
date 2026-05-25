@@ -46,7 +46,7 @@ if ($content === '') {
 }
 
 $color = mb_trim($requestData['color'] ?? Note::DEFAULT_COLOR);
-if (!preg_match('/^#[0-9a-fA-F]{6}$/', $color)) {
+if (!Validator::isHexColor($color)) {
   Response::error('Note color must be in hex format (#RRGGBB).');
 }
 
