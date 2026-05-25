@@ -55,6 +55,17 @@ function setButtonBusy(btn, isBusy) {
   }
 }
 
+function setNoteModalError(message) {
+  const noteModalError = document.getElementById('noteModalError');
+  if (message) {
+    noteModalError.textContent = message;
+    noteModalError.classList.remove('d-none');
+  } else {
+    noteModalError.textContent = '';
+    noteModalError.classList.add('d-none');
+  }
+}
+
 // Confirmation modal
 function confirmAction({
   title = 'Confirmation',
@@ -169,6 +180,8 @@ async function init() {
 
   // Wire the modal show.bs.modal listener
   noteModal.addEventListener('show.bs.modal', (event) => {
+    setNoteModalError('');
+
     const trigger = event.relatedTarget;
     const mode = trigger.dataset.mode;
 
@@ -207,6 +220,8 @@ async function init() {
   noteForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
+    setNoteModalError('');
+
     const payload = {
       title: title.value.trim(),
       content: content.value.trim() || null,
@@ -216,7 +231,6 @@ async function init() {
 
     setButtonBusy(noteSubmitBtn, true);
     const successMessage = noteId.value === '' ? 'Note created.' : 'Note saved.';
-    const errorMessage = noteId.value === '' ? 'Cannot create note.' : 'Cannot save note.';
     try {
       if (noteId.value === '') {
         // Create note
@@ -230,7 +244,7 @@ async function init() {
       bootstrap.Modal.getOrCreateInstance(noteModal).hide();
       await reloadNotes();
     } catch (err) {
-      showToast({ message: errorMessage, variant: 'danger' });
+      setNoteModalError(err.message);
       console.error(err);
     } finally {
       setButtonBusy(noteSubmitBtn, false);
@@ -417,10 +431,11 @@ async function createNote(payload) {
     },
     body: JSON.stringify(payload),
   });
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
   const data = await response.json();
-  if (data.error) throw new Error(data.error);
+
+  if (!response.ok) {
+    throw new Error(data.error ?? `HTTP ${response.status}`);
+  }
 
   return data.success;
 }
@@ -435,10 +450,11 @@ async function updateNote(noteId, payload) {
     },
     body: JSON.stringify(payload),
   });
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
   const data = await response.json();
-  if (data.error) throw new Error(data.error);
+
+  if (!response.ok) {
+    throw new Error(data.error ?? `HTTP ${response.status}`);
+  }
 
   return data.success;
 }
@@ -465,10 +481,11 @@ async function setPinned(id, payload) {
     },
     body: JSON.stringify(payload),
   });
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
   const data = await response.json();
-  if (data.error) throw new Error(data.error);
+
+  if (!response.ok) {
+    throw new Error(data.error ?? `HTTP ${response.status}`);
+  }
 
   return data.success;
 }
