@@ -30,6 +30,7 @@ try {
 
   $tagModel = new Tag($connection);
   $noteModel = new Note($connection);
+  $noteTagModel = new NoteTag($connection);
 
   $existingTag = $tagModel->getById($tagId);
   $existingNote = $noteModel->getById($noteId);
@@ -42,7 +43,7 @@ try {
     Response::error("Cannot remove tag. Note with ID {$noteId} not found.", 404);
   }
 
-  $tagModel->removeFromNote($tagId, $noteId);
+  $noteTagModel->removeFromNote($tagId, $noteId);
 
   Response::success(['tagId' => $tagId, 'noteId' => $noteId, 'removed' => true]);
 } catch (Throwable $e) {

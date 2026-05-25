@@ -93,21 +93,6 @@ class Tag
     return $stmt->rowCount();
   }
 
-  // Removes a tag from a note, returns affected row count
-  public function removeFromNote(int $tagId, int $noteId): int
-  {
-    $stmt = $this->connection->prepare(
-      "DELETE FROM {$this->noteTagsTable} WHERE tag_id = :tagId AND note_id = :noteId"
-    );
-
-    $stmt->execute([
-      ':tagId' => $tagId,
-      ':noteId' => $noteId,
-    ]);
-
-    return $stmt->rowCount();
-  }
-
   // Returns all tags assigned to a note
   /** @return array<int, array<string, mixed>> */
   public function getTagsByNoteId(int $noteId): array
