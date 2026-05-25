@@ -1,0 +1,33 @@
+<?php
+
+declare(strict_types=1);
+
+// src/models/NoteTag.php
+
+class NoteTag
+{
+  private PDO $connection;
+  private string $noteTagsTable = 'note_tags';
+  private string $tagsTable = 'tags';
+
+  public function __construct(PDO $connection)
+  {
+    $this->connection = $connection;
+  }
+
+  // Return all junction rows joined with tag attributes
+  /** @return array<int, array<string, mixed>> */
+  public function getAllNoteTagPairs(): array
+  {
+    $stmt = $this->connection->prepare(
+      "SELECT {$this->noteTagsTable}.note_id, {$this->tagsTable}.id, {$this->tagsTable}.name, {$this->tagsTable}.color
+        FROM {$this->noteTagsTable}
+        JOIN {$this->tagsTable} ON {$this->tagsTable}.id = {$this->noteTagsTable}.tag_id
+        ORDER BY {$this->noteTagsTable}.note_id, {$this->tagsTable}.name"
+    );
+
+    $stmt->execute();
+
+    return $stmt->fetchAll();
+  }
+}
