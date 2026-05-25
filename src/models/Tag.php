@@ -7,6 +7,8 @@ declare(strict_types=1);
 class Tag
 {
   public const int MAX_NAME_LENGTH = 100;
+  public const int MAX_COLOR_LENGTH = 7;
+  public const string DEFAULT_COLOR = '#7B8389';
 
   private PDO $connection;
   private string $tagsTable = 'tags';
@@ -18,17 +20,18 @@ class Tag
     $this->connection = $connection;
   }
 
-  // create(string $name): int
+  // create(string $name, string $color): int
   // Inserts a tag, returns the new tag's ID
-  public function create(string $name): int
+  public function create(string $name, string $color): int
   {
     $stmt = $this->connection->prepare(
-      "INSERT INTO {$this->tagsTable} (name) 
-      VALUES (:name)"
+      "INSERT INTO {$this->tagsTable} (name, color) 
+      VALUES (:name, :color)"
     );
 
     $stmt->execute([
       ':name' => $name,
+      ':color' => $color,
     ]);
 
     return (int) $this->connection->lastInsertId();
@@ -64,17 +67,18 @@ class Tag
     return $stmt->fetch() ?: null;
   }
 
-  // update(int $id, string $name): int
+  // update(int $id, string $name, string $color): int
   // Updates a tag, returns affected row count
-  public function update(int $id, string $name): int
+  public function update(int $id, string $name, string $color): int
   {
     $stmt = $this->connection->prepare(
-      "UPDATE {$this->tagsTable} SET name = :name WHERE id = :id"
+      "UPDATE {$this->tagsTable} SET name = :name, color = :color WHERE id = :id"
     );
 
     $stmt->execute([
       ':id' => $id,
       ':name' => $name,
+      ':color' => $color,
     ]);
 
     return $stmt->rowCount();
