@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 // src/lib/Response.php
 
-class Response
+final class Response
 {
   public static function success(mixed $data, int $statusCode = 200): never
   {
