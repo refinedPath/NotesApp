@@ -1,6 +1,6 @@
 'use strict';
 
-const API_BASE = '../src/api';
+const API_BASE = '/api';
 
 /**
  * Create a DOM element with classes, text, attributes, dataset, and children.
