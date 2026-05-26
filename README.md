@@ -1,6 +1,7 @@
 # NotesApp
 
 **Live demo:** https://notesapp.refinedpath.dev
+*The demo resets every 10 minutes. Anything you create or edit is temporary.*
 
 A simple notes management web application built with vanilla PHP 8.3 and
 MySQL/MariaDB, with a Bootstrap 5 frontend. Notes can be color-coded,
