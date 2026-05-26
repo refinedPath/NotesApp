@@ -1,5 +1,7 @@
 # NotesApp
 
+**Live demo:** https://notesapp.refinedpath.dev
+
 A simple notes management web application built with vanilla PHP 8.3 and
 MySQL/MariaDB, with a Bootstrap 5 frontend. Notes can be color-coded,
 pinned, and (in active development) tagged.
@@ -31,7 +33,7 @@ underway.
 
 - **Backend:** PHP 8.3, MySQL/MariaDB, PDO (no ORM)
 - **Frontend:** Vanilla JavaScript (no framework), Bootstrap 5.3
-- **Tooling:** Composer, PHPStan level 6, php-cs-fixer (PSR-12 + 2-space)
+- **Tooling (not required to run the app):** Composer, PHPStan level 6, php-cs-fixer (PSR-12 + 2-space)
 
 ## Architecture
 
@@ -45,14 +47,14 @@ underway.
 
 ## Setup
 
-Requires PHP 8.3+, MySQL 8 or MariaDB 10+, Composer, and a web server.
+Requires PHP 8.3+, MySQL 8 or MariaDB 10+, and a web server. Composer for development.
 
 ```bash
 # Clone
 git clone git@github.com:refinedPath/NotesApp.git
 cd NotesApp
 
-# Install dependencies
+# Install dependencies for development. Not required to run the app.
 composer install
 
 # Create the database and load the schema
